@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block head %}
+<meta http-equiv="refresh" content="300">
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js'></script>
+<style>
+    .fc-day-today{
+        background-color: #e9ecef !important;
+    }
+    .fc-header-toolbar{
+        margin-bottom: 0 !important;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        firstDay: 1,
+        initialView: 'timeGridDay',
+        initialDate: '{{ date }}',
+        allDaySlot: false,
+        slotMinTime: '10:00:00',
+        slotMaxTime: '22:00:00',
+        displayEventTime: false,
+        contentHeight: 'auto',
+        nowIndicator: true,
+        navLinks: true,
+        longPressDelay: 1000,
+        slotLabelFormat: {
+            hour: '2-digit',
+            hour12: false,
+        },
+        headerToolbar: {
+            left: '',
+            center: '',
+            right: ''
+        },
+        views: {
+            day: {
+                dayHeaderFormat: { weekday: 'long', month: 'long', day: 'numeric' }
+            },
+            week: {
+                dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }
+            }
+        },
+        footerToolbar: {
+          left: 'today',
+          center: 'prev,next',
+          right: 'timeGridWeek,timeGridDay'
+        },
+        dateClick: function(info) {
+            window.location.href = '/booking_form/' + info.dateStr;
+        },
+        events: '/events',
+        eventClick: function(info) {
+            if (info.event.id) {
+                window.location.href = '/delete_form/' + info.event.id;
+            }
+        },
+        loading: function(isLoading) {
+            var spinner = document.getElementById("loading");
+            if (isLoading) {
+                spinner.style.display = "block";
+            } else {
+                spinner.style.display = "none";
+            }
+        }
+      });
+      calendar.render();
+    });
+</script>
+{% endblock %}
+
+{% block card_body %}
+<div id="loading" class="spinner-grow text-warning float-right" role="status"
+     style="width: 6rem; height: 6rem; position: fixed; top: 50%; left: 50%; margin-top: -50px; margin-left: -50px;">
+    <span class="visually-hidden">Loading...</span>
+</div>
+<div id='calendar'></div>
+{% endblock %}

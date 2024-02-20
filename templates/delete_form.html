@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block card_body %}
+<form action="/delete_action" method="POST">
+    <div class="form-group row">
+        <label for="booking_date" class="col-sm-2 col-form-label">Booking date</label>
+        <div class="col-sm-10">
+            <input type="text" readonly class="form-control" id="booking_date"
+                   name="booking_date" value="{{ booking_date }}">
+        </div>
+    </div>
+    <br>
+    <div class="form-group row">
+        <label for="booking_time" class="col-sm-2 col-form-label">Booking time</label>
+        <div class="col-sm-10">
+            <input type="text" readonly class="form-control" id="booking_time"
+                   name="booking_time" value="{{ booking_time }}">
+        </div>
+    </div>
+    <br>
+    <div class="form-group row">
+        <label for="court" class="col-sm-2 col-form-label">Court</label>
+        <div class="col-sm-10">
+            <input type="text" readonly class="form-control" id="court"
+                   name="court" value="{{ court }}">
+        </div>
+    </div>
+    <br>
+    <div class="form-group row" style="display: none">
+        <label for="id" class="col-sm-2 col-form-label">Id</label>
+        <div class="col-sm-10">
+            <input type="text" readonly class="form-control" id="id" name="id" value="{{ id }}">
+        </div>
+    </div>
+    {% if error %}
+        {% block error %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+            <br>
+        {% endblock error %}
+    {% endif %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="/calendar/{{ booking_date }}" class="btn btn-secondary me-md-2">Cancel</a>
+        <button id="submit" class="btn btn-primary" type="submit" onclick="swapButton()">Delete</button>
+        <button id="spinner" class="btn btn-primary" type="button" disabled style="display: none">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Delete
+        </button>
+    </div>
+</form>
+{% endblock %}
