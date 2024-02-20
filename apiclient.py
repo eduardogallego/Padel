@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # Max retries exceeded with url: /ws/IESACSRestServices.CLRestPublicaciones.svc/schedule/list
 # (Caused by SSLError(SSLError(1, '[SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1123)')))
 # https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
-requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+# requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
 
 
 class ApiClient:

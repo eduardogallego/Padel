@@ -21,7 +21,7 @@ api_client = ApiClient(config)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "/login"
-user = User(config.get('user_id'), config.get('user_name'), config.get('user_password'))
+user = User(config.get('login_id'), config.get('login_user'), config.get('login_password'))
 status_cache = {}
 events_cache = {}
 cache = Cache()
