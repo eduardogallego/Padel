@@ -31,6 +31,14 @@
             hour: '2-digit',
             hour12: false,
         },
+        customButtons: {
+            stats: {
+                text: 'stats',
+                click: function() {
+                    window.location.href = '/stats';
+                }
+            }
+        },
         headerToolbar: {
             left: '',
             center: '',
@@ -45,9 +53,9 @@
             }
         },
         footerToolbar: {
-          left: 'today',
-          center: 'prev,next',
-          right: 'timeGridWeek,timeGridDay'
+            left: 'stats',
+            center: 'prev,next',
+            right: 'today,timeGridWeek,timeGridDay'
         },
         dateClick: function(info) {
             window.location.href = '/booking_form/' + info.dateStr;

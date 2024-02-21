@@ -1,8 +1,6 @@
 /.idea/
-/config.json
-/credentials.json
-/padel_courts.log
-/scheduled_events.json
+/config/
+/padel.log
 /test.py
 /venv/
 /workingdir/

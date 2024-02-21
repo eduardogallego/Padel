@@ -6,7 +6,7 @@ import logging.handlers
 class Config:
 
     def __init__(self):
-        with open('config.json', "r") as config_file:
+        with open('config/config.json', "r") as config_file:
             self._config = json.load(config_file)
 
     def get(self, parameter):
@@ -15,7 +15,7 @@ class Config:
 
 class Logger:
     def __init__(self):
-        handler = logging.handlers.WatchedFileHandler('padel_courts.log')
+        handler = logging.handlers.WatchedFileHandler('padel.log')
         handler.setFormatter(logging.Formatter(
             fmt="%(asctime)s.%(msecs)03d - %(levelname)s [%(threadName)s]- %(name)s: %(message)s",
             datefmt="%d/%b/%Y %H:%M:%S"))

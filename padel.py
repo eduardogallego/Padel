@@ -246,6 +246,12 @@ def delete_action():
     return redirect("/calendar/%s" % request.form['booking_date'])
 
 
+@app.route('/stats', methods=['GET'])
+@login_required
+def stats():
+    return render_template("stats.html")
+
+
 @app.route('/favicon.ico', methods=['GET'])
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'images'),
