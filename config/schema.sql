@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS players;
+CREATE TABLE players (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT UNIQUE NOT NULL);
+
+DROP TABLE IF EXISTS matches;
+CREATE TABLE matches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  match_date DATE NOT NULL,
+  partner INTEGER,
+  rival1 INTEGER NOT NULL,
+  rival2 INTEGER,
+  result BOOLEAN,
+  FOREIGN KEY(partner) REFERENCES players(id),
+  FOREIGN KEY(rival1) REFERENCES players(id),
+  FOREIGN KEY(rival2) REFERENCES players(id));
+
+INSERT INTO players(name) VALUES("unknown");
