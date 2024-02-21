@@ -1,5 +1,7 @@
 /.idea/
-/config/
+/config/config.json
+/config/credentials.json
+/config/scheduled.json
 /padel.log
 /test.py
 /venv/
