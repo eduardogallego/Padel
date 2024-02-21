@@ -252,6 +252,27 @@ def stats():
     return render_template("stats.html")
 
 
+@app.route('/match_form', methods=['GET'])
+@login_required
+def match_form():
+    players = {"1": "unknown", "2": "none", "3": "Santi"}
+    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'),
+                           partner="unknown", rival1="unknown", rival2="unknown",
+                           players={1: "unknown", 2: "none", 3: "Santi", 4: "Javi"})
+
+
+@app.route('/match_action', methods=['POST'])
+@login_required
+def match_action():
+    match_date = request.form['date']
+    partner = request.form['partner']
+    rival1 = request.form['rival1']
+    rival2 = request.form['rival2']
+    result = request.form['result']
+    print(f"{match_date},{partner},{rival1},{rival2},{result}")
+    return redirect("/match_form")
+
+
 @app.route('/favicon.ico', methods=['GET'])
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'images'),
