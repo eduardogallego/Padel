@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Stats</title>
-</head>
-<body>
-  <p>Hola</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block card_body %}
+Hola amigo!!
+<nav class="navbar sticky-bottom bg-body-primary">
+  <div class="container-fluid">
+    <a href="/calendar" class="btn btn-primary me-md-2">Calendar</a>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a href="/player_form" class="btn btn-primary me-md-0">Add Player</a>
+        <a href="/match_form" class="btn btn-primary me-md-0">Add Match</a>
+    </div>
+  </div>
+</nav>
+{% endblock %}

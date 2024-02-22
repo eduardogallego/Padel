@@ -316,5 +316,10 @@ def get_image(image):
     return send_from_directory(os.path.join(app.root_path, 'images'), image)
 
 
+@app.route('/web/<resource>', methods=['GET'])
+def get_resource(resource):
+    return send_from_directory(os.path.join(app.root_path, 'web'), resource)
+
+
 debug_mode = config.get('debug_mode') == 'True'
 app.run(host='0.0.0.0', port=config.get('port'), debug=debug_mode)
