@@ -2,6 +2,7 @@ import logging
 import os
 
 from apiclient import ApiClient
+from database import Database
 from datetime import date, datetime, timedelta
 from cache import Cache
 from flask import Flask, redirect, render_template, request, send_from_directory
@@ -25,6 +26,7 @@ user = User(config.get('login_id'), config.get('login_user'), config.get('login_
 status_cache = {}
 events_cache = {}
 cache = Cache()
+database = Database(config)
 
 
 @login_manager.user_loader
@@ -255,22 +257,52 @@ def stats():
 @app.route('/match_form', methods=['GET'])
 @login_required
 def match_form():
-    players = {"1": "unknown", "2": "none", "3": "Santi"}
-    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'),
-                           partner="unknown", rival1="unknown", rival2="unknown",
-                           players={1: "unknown", 2: "none", 3: "Santi", 4: "Javi"})
+    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'), partner=0,
+                           rival1=0, rival2=0, result="1", players=database.get_players())
 
 
 @app.route('/match_action', methods=['POST'])
 @login_required
 def match_action():
+    error = ''
     match_date = request.form['date']
-    partner = request.form['partner']
-    rival1 = request.form['rival1']
-    rival2 = request.form['rival2']
-    result = request.form['result']
-    print(f"{match_date},{partner},{rival1},{rival2},{result}")
+    partner = int(request.form['partner'])
+    rival_a = int(request.form['rival1'])
+    rival_b = int(request.form['rival2'])
+    rival1 = rival_a if rival_a < rival_b else rival_b
+    rival2 = rival_b if rival_a < rival_b else rival_a
+    result = True if request.form['result'] == "1" else False if request.form['result'] == "0" else None
+    players = database.get_players()
+    if (rival1 == 0 and rival2 == 0) or (partner == 0 and rival1 != 0 and rival2 != 0):
+        error = 'Missing players'
+    elif partner > 0 and (partner == rival1 or partner == rival2 or rival1 == rival2):
+        error = 'Repeated players'
+    elif database.insert_match(match_date, partner, rival_a, rival_b, result) != 1:
+        error = 'Wrong match parameters'
+    if error:
+        return render_template("match_form.html", date=match_date, partner=partner, rival1=rival_a,
+                               rival2=rival_b, result=request.form['result'], players=players, error=error)
     return redirect("/match_form")
+
+
+@app.route('/player_form', methods=['GET'])
+@login_required
+def player_form():
+    return render_template("player_form.html")
+
+
+@app.route('/player_action', methods=['POST'])
+@login_required
+def player_action():
+    player = request.form['player'].strip()
+    error = ''
+    if len(player) == 0:
+        error = "Player cannot be empty"
+    elif database.insert_player(player) != 1:
+        error = f"Wrong player name '{player}'"
+    if error:
+        return render_template("player_form.html", error=error)
+    return redirect("/player_form")
 
 
 @app.route('/favicon.ico', methods=['GET'])
