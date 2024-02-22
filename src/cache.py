@@ -2,8 +2,8 @@ import json
 import os
 
 from datetime import datetime, timedelta
-from utils import Config
-from scheduler import Scheduler
+from src.utils import Config
+from src.scheduler import Scheduler
 
 config = Config()
 

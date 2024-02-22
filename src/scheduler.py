@@ -2,10 +2,10 @@ import logging
 import ntplib
 import time
 
-from apiclient import ApiClient
 from datetime import datetime, timedelta
+from src.apiclient import ApiClient
+from src.utils import Config
 from threading import Thread
-from utils import Config
 
 logger = logging.getLogger('scheduler')
 config = Config()

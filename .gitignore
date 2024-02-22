@@ -3,6 +3,6 @@
 /config/credentials.json
 /config/scheduled.json
 /padel.log
-/test.py
+/src/test.py
 /venv/
 /workingdir/
