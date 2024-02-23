@@ -31,7 +31,7 @@ stop() {
 
 update() {
   git reset --hard
-  git pull origin master
+  git pull origin main
 }
 
 case "$1" in
