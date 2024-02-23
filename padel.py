@@ -248,12 +248,6 @@ def delete_action():
     return redirect("/calendar/%s" % request.form['booking_date'])
 
 
-@app.route('/matches', methods=['GET'])
-@login_required
-def matches():
-    return render_template("matches.html")
-
-
 @app.route('/match_action', methods=['POST'])
 @login_required
 def match_action():
@@ -288,6 +282,12 @@ def match_form():
                            rival1=0, rival2=0, result="1", players=database.get_players())
 
 
+@app.route('/matches', methods=['GET'])
+@login_required
+def matches():
+    return render_template("matches.html")
+
+
 @app.route('/matches.json', methods=['GET'])
 @login_required
 def matches_json():
@@ -312,6 +312,18 @@ def player_action():
 @login_required
 def player_form():
     return render_template("player_form.html")
+
+
+@app.route('/players', methods=['GET'])
+@login_required
+def players():
+    return render_template("players.html")
+
+
+@app.route('/players.json', methods=['GET'])
+@login_required
+def players_json():
+    return database.get_players_json()
 
 
 @app.route('/favicon.ico', methods=['GET'])

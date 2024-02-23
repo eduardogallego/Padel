@@ -45,6 +45,51 @@ class Database:
             result[row[0]] = row[1]
         return result
 
+    def get_players_json(self):
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT id, name FROM players')
+        rows = cursor.fetchall()
+        players = {}
+        for row in rows:
+            players[int(row[0])] = {"player": row[1], "total": 0, "pt": 0, "pw": 0, "pd": 0,
+                                    "pl": 0, "rt": 0, "rw": 0, "rd": 0, "rl": 0}
+        cursor.execute('SELECT partner, rival1, rival2, result FROM matches')
+        rows = cursor.fetchall()
+        for row in rows:
+            partner = row[0]
+            rival1 = row[1]
+            rival2 = row[2]
+            result = row[3]
+            if partner is not None:
+                player = players[partner]
+                player['total'] += 1
+                player['pt'] += 1
+                if result is None:
+                    player['pd'] += 1
+                elif result:
+                    player['pw'] += 1
+                else:
+                    player['pl'] += 1
+            for rival in [rival1, rival2]:
+                if rival is not None:
+                    player = players[rival]
+                    player['total'] += 1
+                    player['rt'] += 1
+                    if result is None:
+                        player['rd'] += 1
+                    elif result:
+                        player['rw'] += 1
+                    else:
+                        player['rl'] += 1
+        players = list(players.values())
+        players = sorted(players, key=lambda k: (-k['total'], -k['pw'], -k['pd'], -k['pl'], k['player'].lower()))
+        result = []
+        for player in players:
+            result.append({'player': player['player'], 'total': player['total'],
+                           'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
+                           'rt': player['rt'], 'rs': f"{player['rl']}/{player['rd']}/{player['rw']}"})
+        return json.dumps(result)
+
     def insert_player(self, player):
         cursor = self.connection.cursor()
         cursor.execute(f'INSERT OR IGNORE INTO players(name) VALUES(?)', (player,))
@@ -62,6 +107,7 @@ class Database:
 if __name__ == "__main__":
     configuration = Config()
     database = Database(configuration)
-    print(f"Matches: {database.get_matches()}")
-    print(f"Players: {json.dumps(database.get_players())}")
+    # print(f"Matches: {database.get_matches()}")
+    # print(f"Players: {json.dumps(database.get_players())}")
+    # print(f"Players JSON: {database.get_players_json()}")
     pass

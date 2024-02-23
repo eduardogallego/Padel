@@ -1,3 +1,8 @@
+.right {
+    padding-right: 3px !important;
+    text-align: right;
+}
+
 .draw {
     background-color: orange !important;
     color: white !important;

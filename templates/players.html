@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block card_body %}
-<table class="table-borderless" data-toggle="table" data-search="true" data-url="matches.json">
+<table class="table-borderless" data-toggle="table" data-search="true" data-url="players.json">
   <thead>
     <tr>
-      <th data-field="date" data-cell-style="cellStyleResult"
-          data-formatter="formatterDate" data-sortable="true">Date</th>
-      <th data-field="partner" data-cell-style="cellStyleResult" data-sortable="true">Partner</th>
-      <th data-field="rivals" data-cell-style="cellStyleResult" data-sortable="true">Rivals</th>
+      <th data-field="player" data-sortable="true">Player</th>
+      <th class="right" data-field="total" data-sortable="true">Total</th>
+      <th class="right" data-field="pt" data-sortable="true">Partner</th>
+      <th class="right" data-field="ps">Stats</th>
+      <th class="right" data-field="rt" data-sortable="true">Rival</th>
+      <th class="right" data-field="rs">Stats</th>
     </tr>
   </thead>
 </table>
@@ -15,7 +17,7 @@
 <nav class="navbar sticky-bottom bg-body-primary">
   <div class="container-fluid">
     <a href="/calendar" class="btn btn-primary me-md-2">Calendar</a>
-    <a href="/players" class="btn btn-primary me-md-2">Players</a>
+    <a href="/matches" class="btn btn-primary me-md-2">Matches</a>
     <a href="/match_form" class="btn btn-primary me-md-0">Add Match</a>
   </div>
 </nav>
