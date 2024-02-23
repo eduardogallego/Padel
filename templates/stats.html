@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 
 {% block card_body %}
-Hola amigo!!
+<table class="table-borderless" data-toggle="table" data-search="true" data-url="matches.json">
+  <thead>
+    <tr>
+      <th data-sortable="true" data-field="date">Date</th>
+      <th data-sortable="true" data-field="partner">Partner</th>
+      <th data-sortable="true" data-field="rival1">Rival 1</th>
+      <th data-sortable="true" data-field="rival2">Rival 2</th>
+      <th data-sortable="true" data-field="result">Result</th>
+    </tr>
+  </thead>
+</table>
+<br>
 <nav class="navbar sticky-bottom bg-body-primary">
   <div class="container-fluid">
     <a href="/calendar" class="btn btn-primary me-md-2">Calendar</a>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <a href="/player_form" class="btn btn-primary me-md-0">Add Player</a>
-        <a href="/match_form" class="btn btn-primary me-md-0">Add Match</a>
-    </div>
+    <a href="/match_form" class="btn btn-primary me-md-0">Add Match</a>
   </div>
 </nav>
 {% endblock %}
+
+{% block body_end %}
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+{% endblock %}
+

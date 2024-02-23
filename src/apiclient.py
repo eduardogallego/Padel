@@ -61,14 +61,17 @@ class ApiClient:
             while not self.login():
                 time.sleep(1)
 
-    def get_court_status(self, court, date):
+    def get_court_status(self, court, date, retry=False):
         ini_tt = time.time() * 1000
         self.check_credentials()
         date_str = date.strftime('%Y-%m-%d')
         request_dict = {'dtReserva': date_str,
                         'idElementoComun': self.config.get('court1_id') if court == 1 else self.config.get('court2_id')}
         response = requests.post(self.config.get('court_status_url'), json=request_dict, headers=self.headers)
-        if response.status_code != 200:
+        if response.status_code == 401 and not retry:
+            self.token = None
+            return self.get_court_status(court, date, True)
+        elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error('Get court %d status %s error (%d ms): %d - %s'
                               % (court, date_str, delta, response.status_code, response.reason))
@@ -82,7 +85,7 @@ class ApiClient:
         self.logger.info('Get court %d status %s (%d ms)' % (court, date_str, delta))
         return status_dict
 
-    def get_month_reservations(self, date):
+    def get_month_reservations(self, date, retry=False):
         ini_tt = time.time() * 1000
         self.check_credentials()
         date_str = date.strftime('%Y-%m-%d')
@@ -94,7 +97,10 @@ class ApiClient:
                         "fechaActivacionHasta": end_day.strftime('%d/%m/%Y'),   # 31/03/2023
                         "fechaDiaActual": "", "tmTitulo": "", "lstIdTipoEvento": []}
         response = requests.post(self.config.get('reservations_url'), json=request_dict, headers=self.headers)
-        if response.status_code != 200:
+        if response.status_code == 401 and not retry:
+            self.token = None
+            return self.get_month_reservations(date, True)
+        elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error('Get month %s reservations error (%d ms) %d - %s'
                               % (date_str, delta, response.status_code, response.reason))
@@ -104,7 +110,7 @@ class ApiClient:
         self.logger.info('Get month %s reservations (%d ms)' % (date_str, delta))
         return response_dict['data']
 
-    def reserve_court(self, timestamp, court):
+    def reserve_court(self, timestamp, court, retry=False):
         ini_tt = time.time() * 1000
         self.check_credentials()
         booking_end = timestamp + timedelta(hours=1)
@@ -115,7 +121,10 @@ class ApiClient:
                         'numYoungBooking': 0, 'numOldBooking': 0, 'blUserIncluded': '1',
                         'idElementoComun': self.config.get('court1_id') if court == 1 else self.config.get('court2_id')}
         response = requests.post(self.config.get('court_booking_url'), json=request_dict, headers=self.headers)
-        if response.status_code != 200:
+        if response.status_code == 401 and not retry:
+            self.token = None
+            return self.reserve_court(timestamp, court, True)
+        elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error('Reserve court %d %s error (%d ms) %d - %s'
                               % (court, timestamp.strftime('%Y-%m-%d %H'), delta,
@@ -132,12 +141,15 @@ class ApiClient:
         self.logger.info('Reserve court %d %s (%d ms)' % (court, timestamp.strftime('%Y-%m-%d %H'), delta))
         return None
 
-    def delete_reservation(self, booking_id):
+    def delete_reservation(self, booking_id, retry=False):
         ini_tt = time.time() * 1000
         self.check_credentials()
         url = '%s/%s' % (self.config.get('court_booking_url'), booking_id)
         response = requests.delete(url, headers=self.headers)
-        if response.status_code != 200:
+        if response.status_code == 401 and not retry:
+            self.token = None
+            return self.delete_reservation(booking_id, True)
+        elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error('Delete reservation %s error (%d ms) %d - %s'
                               % (booking_id, delta, response.status_code, response.reason))

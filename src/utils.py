@@ -1,12 +1,13 @@
 import json
 import logging
 import logging.handlers
+import os
 
 
 class Config:
 
     def __init__(self):
-        with open('config/config.json', "r") as config_file:
+        with open(f'{os.path.dirname(os.path.realpath(__file__))}/../config/config.json', "r") as config_file:
             self._config = json.load(config_file)
 
     def get(self, parameter):

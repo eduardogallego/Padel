@@ -272,17 +272,22 @@ def match_action():
     rival1 = rival_a if rival_a < rival_b else rival_b
     rival2 = rival_b if rival_a < rival_b else rival_a
     result = True if request.form['result'] == "1" else False if request.form['result'] == "0" else None
-    players = database.get_players()
     if (rival1 == 0 and rival2 == 0) or (partner == 0 and rival1 != 0 and rival2 != 0):
         error = 'Missing players'
     elif partner > 0 and (partner == rival1 or partner == rival2 or rival1 == rival2):
         error = 'Repeated players'
-    elif database.insert_match(match_date, partner, rival_a, rival_b, result) != 1:
+    elif database.insert_match(match_date, partner, rival1, rival2, result) != 1:
         error = 'Wrong match parameters'
     if error:
-        return render_template("match_form.html", date=match_date, partner=partner, rival1=rival_a,
-                               rival2=rival_b, result=request.form['result'], players=players, error=error)
-    return redirect("/match_form")
+        return render_template("match_form.html", date=match_date, partner=partner, rival1=rival_a, rival2=rival_b,
+                               result=request.form['result'], players=database.get_players(), error=error)
+    return redirect("/stats")
+
+
+@app.route('/matches.json', methods=['GET'])
+@login_required
+def matches_json():
+    return database.get_matches()
 
 
 @app.route('/player_form', methods=['GET'])
@@ -302,7 +307,7 @@ def player_action():
         error = f"Wrong player name '{player}'"
     if error:
         return render_template("player_form.html", error=error)
-    return redirect("/player_form")
+    return redirect("/match_form")
 
 
 @app.route('/favicon.ico', methods=['GET'])
