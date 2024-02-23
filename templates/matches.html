@@ -4,11 +4,10 @@
 <table class="table-borderless" data-toggle="table" data-search="true" data-url="matches.json">
   <thead>
     <tr>
-      <th data-sortable="true" data-field="date">Date</th>
-      <th data-sortable="true" data-field="partner">Partner</th>
-      <th data-sortable="true" data-field="rival1">Rival 1</th>
-      <th data-sortable="true" data-field="rival2">Rival 2</th>
-      <th data-sortable="true" data-field="result">Result</th>
+      <th data-field="date" data-cell-style="cellStyleResult"
+          data-formatter="formatterDate" data-sortable="true">Date</th>
+      <th data-field="partner" data-cell-style="cellStyleResult" data-sortable="true">Partner</th>
+      <th data-field="rivals" data-cell-style="cellStyleResult" data-sortable="true">Rivals</th>
     </tr>
   </thead>
 </table>

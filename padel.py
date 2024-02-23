@@ -248,10 +248,10 @@ def delete_action():
     return redirect("/calendar/%s" % request.form['booking_date'])
 
 
-@app.route('/stats', methods=['GET'])
+@app.route('/matches', methods=['GET'])
 @login_required
-def stats():
-    return render_template("stats.html")
+def matches():
+    return render_template("matches.html")
 
 
 @app.route('/match_form', methods=['GET'])
@@ -266,11 +266,15 @@ def match_form():
 def match_action():
     error = ''
     match_date = request.form['date']
-    partner = int(request.form['partner'])
-    rival_a = int(request.form['rival1'])
-    rival_b = int(request.form['rival2'])
-    rival1 = rival_a if rival_a < rival_b else rival_b
-    rival2 = rival_b if rival_a < rival_b else rival_a
+    partner = None if request.form['partner'] == '0' else int(request.form['partner'])
+    rival_a = None if request.form['rival1'] == '0' else int(request.form['rival1'])
+    rival_b = None if request.form['rival2'] == '0' else int(request.form['rival2'])
+    if rival_a is None or rival_b is None:
+        rival1 = rival_a if rival_b is None else rival_b
+        rival2 = None
+    else:
+        rival1 = rival_a if rival_a < rival_b else rival_b
+        rival2 = rival_b if rival_a < rival_b else rival_a
     result = True if request.form['result'] == "1" else False if request.form['result'] == "0" else None
     if (rival1 == 0 and rival2 == 0) or (partner == 0 and rival1 != 0 and rival2 != 0):
         error = 'Missing players'
@@ -281,7 +285,7 @@ def match_action():
     if error:
         return render_template("match_form.html", date=match_date, partner=partner, rival1=rival_a, rival2=rival_b,
                                result=request.form['result'], players=database.get_players(), error=error)
-    return redirect("/stats")
+    return redirect("/matches")
 
 
 @app.route('/matches.json', methods=['GET'])
