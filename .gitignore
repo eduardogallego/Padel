@@ -2,7 +2,10 @@
 /config/config.json
 /config/credentials.json
 /config/scheduled.json
+/config/git_credentials
+/nohup.out
 /padel.log
+/src/__pycache__/
 /src/test.py
 /venv/
 /workingdir/
