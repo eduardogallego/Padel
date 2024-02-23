@@ -254,13 +254,6 @@ def matches():
     return render_template("matches.html")
 
 
-@app.route('/match_form', methods=['GET'])
-@login_required
-def match_form():
-    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'), partner=0,
-                           rival1=0, rival2=0, result="1", players=database.get_players())
-
-
 @app.route('/match_action', methods=['POST'])
 @login_required
 def match_action():
@@ -288,16 +281,17 @@ def match_action():
     return redirect("/matches")
 
 
+@app.route('/match_form', methods=['GET'])
+@login_required
+def match_form():
+    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'), partner=0,
+                           rival1=0, rival2=0, result="1", players=database.get_players())
+
+
 @app.route('/matches.json', methods=['GET'])
 @login_required
 def matches_json():
     return database.get_matches()
-
-
-@app.route('/player_form', methods=['GET'])
-@login_required
-def player_form():
-    return render_template("player_form.html")
 
 
 @app.route('/player_action', methods=['POST'])
@@ -312,6 +306,12 @@ def player_action():
     if error:
         return render_template("player_form.html", error=error)
     return redirect("/match_form")
+
+
+@app.route('/player_form', methods=['GET'])
+@login_required
+def player_form():
+    return render_template("player_form.html")
 
 
 @app.route('/favicon.ico', methods=['GET'])
