@@ -305,7 +305,7 @@ def player_action():
         error = f"Wrong player name '{player}'"
     if error:
         return render_template("player_form.html", error=error)
-    return redirect("/match_form")
+    return redirect("/players")
 
 
 @app.route('/player_form', methods=['GET'])
