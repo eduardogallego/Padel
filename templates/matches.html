@@ -1,12 +1,13 @@
 {% extends "stats_base.html" %}
 
 {% block body %}
-<table class="table-borderless" data-toggle="table" data-url="matches.json">
+<table class="table-borderless" data-search="true" data-show-footer="true" data-toggle="table" data-url="matches.json">
   <thead>
     <tr>
-      <th data-field="date" data-cell-style="cellStyleResult"
+      <th data-field="date" data-cell-style="cellStyleResult" data-footer-formatter="footItemCountFormatter"
           data-formatter="formatterDate" data-sortable="true">D</th>
-      <th data-field="partner" data-cell-style="cellStyleResult" data-sortable="true">Partner</th>
+      <th data-field="partner" data-cell-style="cellStyleResult"
+          data-footer-formatter="footResults" data-sortable="true">Partner</th>
       <th data-field="rivals" data-cell-style="cellStyleResult" data-sortable="true">Rivals</th>
     </tr>
   </thead>

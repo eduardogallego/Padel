@@ -87,7 +87,7 @@ class Database:
         for player in players:
             result.append({'player': player['player'], 'total': player['total'],
                            'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
-                           'rt': player['rt'], 'rs': f"{player['rl']}/{player['rd']}/{player['rw']}"})
+                           'rt': player['rt'], 'rs': f"{player['rw']}/{player['rd']}/{player['rl']}"})
         return json.dumps(result)
 
     def insert_player(self, player):

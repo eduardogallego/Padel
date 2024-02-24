@@ -8,6 +8,26 @@ function cellStyleResult(value, row, index) {
     }
 }
 
+function footItemCountFormatter(data) {
+    return data.length;
+}
+
+function footResults(data) {
+    var win = 0;
+    var lose = 0
+    var draw = 0;
+    data.forEach(function(data) {
+        if (data.result == null) {
+            draw += 1;
+        } else if (data.result == 1) {
+            win += 1;
+        } else {
+            lose += 1;
+        }
+    });
+    return win + " / " + lose + " / " + draw;
+}
+
 function formatterDate(value, row) {
     var date = new Date(value)
     return date.getDate() + "-" + (date.getMonth() + 1);
