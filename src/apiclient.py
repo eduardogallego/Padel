@@ -1,21 +1,28 @@
 import json
 import logging
 import os
-import requests
 import time
 
 from calendar import monthrange
 from datetime import datetime, timedelta
+from requests import Session
+from requests.adapters import HTTPAdapter
+from urllib3 import PoolManager
+from urllib3.util import create_urllib3_context
 
-# urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='private.tucomunidapp.com', port=443):
-# Max retries exceeded with url: /ws/IESACSRestServices.CLRestPublicaciones.svc/schedule/list
-# (Caused by SSLError(SSLError(1, '[SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1123)')))
-# https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
-# requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+
+class CipherAdapter(HTTPAdapter):
+    def init_poolmanager(self, connections, maxsize, block=False, **pool_kwargs):
+        ctx = create_urllib3_context(ciphers=":HIGH:!DH:!aNULL")
+        self.poolmanager = PoolManager(
+          num_pools=connections,
+          maxsize=maxsize,
+          block=block,
+          ssl_context=ctx
+        )
 
 
 class ApiClient:
-
     def __init__(self, config):
         self.logger = logging.getLogger('api-client')
         self.config = config
@@ -35,13 +42,15 @@ class ApiClient:
             'Origin': 'https://private.tucomunidapp.com',
             'Referer': 'https://private.tucomunidapp.com/community/booking-new/18551'
         }
+        self.session = Session()
+        self.session.mount(config.get('endpoint_url'), CipherAdapter())
 
     def login(self):
         ini_tt = time.time() * 1000
         user = self.config.get('user_name')
         requests_dict = {"Password": self.config.get('user_password'),
                          "User": user, "LoginType": "3", "Invitations": True}
-        response = requests.post('https://api.iesa.es/tcsecurity/api/v1/login', json=requests_dict)
+        response = self.session.post('https://api.iesa.es/tcsecurity/api/v1/login', json=requests_dict)
         if response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error('Login %s error (%d ms) %d - %s' % (user, delta, response.status_code, response.reason))
@@ -67,7 +76,7 @@ class ApiClient:
         date_str = date.strftime('%Y-%m-%d')
         request_dict = {'dtReserva': date_str,
                         'idElementoComun': self.config.get('court1_id') if court == 1 else self.config.get('court2_id')}
-        response = requests.post(self.config.get('court_status_url'), json=request_dict, headers=self.headers)
+        response = self.session.post(self.config.get('court_status_url'), json=request_dict, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
             return self.get_court_status(court, date, True)
@@ -96,7 +105,7 @@ class ApiClient:
                         "fechaActivacionDesde": ini_day.strftime('%d/%m/%Y'),   # 01/03/2023
                         "fechaActivacionHasta": end_day.strftime('%d/%m/%Y'),   # 31/03/2023
                         "fechaDiaActual": "", "tmTitulo": "", "lstIdTipoEvento": []}
-        response = requests.post(self.config.get('reservations_url'), json=request_dict, headers=self.headers)
+        response = self.session.post(self.config.get('reservations_url'), json=request_dict, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
             return self.get_month_reservations(date, True)
@@ -120,7 +129,7 @@ class ApiClient:
                         'impPrecio': '0', 'idComunidad': '4100059', 'idProperty': '16288528',
                         'numYoungBooking': 0, 'numOldBooking': 0, 'blUserIncluded': '1',
                         'idElementoComun': self.config.get('court1_id') if court == 1 else self.config.get('court2_id')}
-        response = requests.post(self.config.get('court_booking_url'), json=request_dict, headers=self.headers)
+        response = self.session.post(self.config.get('court_booking_url'), json=request_dict, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
             return self.reserve_court(timestamp, court, True)
@@ -145,7 +154,7 @@ class ApiClient:
         ini_tt = time.time() * 1000
         self.check_credentials()
         url = '%s/%s' % (self.config.get('court_booking_url'), booking_id)
-        response = requests.delete(url, headers=self.headers)
+        response = self.session.delete(url, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
             return self.delete_reservation(booking_id, True)
