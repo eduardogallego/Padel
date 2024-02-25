@@ -1,6 +1,7 @@
 {% extends "stats_base.html" %}
 
 {% block body %}
+<canvas id="chartId" aria-label="chart" height="300" width="380"></canvas>
 <table class="table-borderless" data-search="true" data-show-footer="true" data-toggle="table" data-url="matches.json">
   <thead>
     <tr>
@@ -21,4 +22,3 @@
   </div>
 </nav>
 {% endblock %}
-

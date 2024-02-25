@@ -1,3 +1,5 @@
+var chartId;
+
 function cellStyleResult(value, row, index) {
     var result = 'draw';
     if (row.result != null) {
@@ -25,7 +27,25 @@ function footResults(data) {
             lose += 1;
         }
     });
-    return win + " / " + lose + " / " + draw;
+    var chart = document.getElementById("chartId").getContext("2d");
+    if (chartId) {
+        chartId.destroy()
+    }
+    chartId = new Chart(chart, {
+        type: 'pie',
+        data: {
+            labels: ["win", "draw", "lose"],
+            datasets: [{
+                data: [win, draw, lose],
+                backgroundColor: ['green', 'orange', 'red'],
+                hoverOffset: 5
+            }],
+        },
+        options: {
+            responsive: false
+        }
+    });
+    return win + " / " + draw + " / " + lose;
 }
 
 function formatterDate(value, row) {
