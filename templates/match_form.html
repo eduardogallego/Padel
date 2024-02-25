@@ -81,16 +81,16 @@
             <select class="form-control" id="result" name="result">
                 {% if result == "1" %}
                     <option selected="selected" value="1">win</option>
-                    <option value="0">lose</option>
                     <option value="2">draw</option>
+                    <option value="0">lose</option>
                 {% elif result == "0" %}
                     <option value="1">win</option>
-                    <option selected="selected" value="0">lose</option>
                     <option value="2">draw</option>
+                    <option selected="selected" value="0">lose</option>
                 {% else %}
                     <option value="1">win</option>
-                    <option value="0">lose</option>
                     <option selected="selected" value="2">draw</option>
+                    <option value="0">lose</option>
                 {% endif %}
             </select>
         </div>

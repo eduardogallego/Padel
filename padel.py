@@ -46,7 +46,7 @@ def login_action():
     if user.get_user_name() == form_user and user.login(form_password) \
             and login_user(user=user, remember=True, duration=timedelta(days=30)):
         logger.info("User %s authenticated" % form_user)
-        return redirect("/calendar")
+        return redirect("/matches")
     else:
         user.logout()
         logger.warning("Authentication error %s %s" % (form_user, form_password))
@@ -56,7 +56,7 @@ def login_action():
 @app.route('/', methods=['GET'])
 @login_required
 def index():
-    return redirect("/calendar")
+    return redirect("/matches")
 
 
 @app.route('/calendar', defaults={'booking_date': None}, methods=['GET'])
