@@ -1,6 +1,51 @@
 var chartId;
 
-function cellStyleResult(value, row, index) {
+function cellStylePartnerResult(value, row, index) {
+    var result = '';
+    var sum = row.pw - row.pl;
+    if (sum > 0) {
+        result = 'win';
+    } else if (sum < 0) {
+        result = 'lose';
+    } else if ((row.pw + row.pd + row.pl) > 0) {
+        result = 'draw';
+    }
+    return {
+        classes: result
+    }
+}
+
+function cellStylePlayerResult(value, row, index) {
+    var result = '';
+    var sum = row.pw + row.rw - row.pl - row.rl;
+    if (sum > 0) {
+        result = 'win';
+    } else if (sum < 0) {
+        result = 'lose';
+    } else if (row.total > 0) {
+        result = 'draw';
+    }
+    return {
+        classes: result
+    }
+}
+
+function cellStyleRivalResult(value, row, index) {
+    var result = '';
+    var sum = row.rw - row.rl;
+    if (sum > 0) {
+        result = 'win';
+    } else if (sum < 0) {
+        result = 'lose';
+    } else if ((row.rw + row.rd + row.rl) > 0) {
+        result = 'draw';
+    }
+    return {
+        classes: result
+    }
+}
+
+function cellStyleMatchResult(value, row, index) {
     var result = 'draw';
     if (row.result != null) {
         result = row.result == 1 ? 'win' : 'lose';

@@ -85,7 +85,8 @@ class Database:
         players = sorted(players, key=lambda k: (-k['total'], -k['pw'], -k['pd'], -k['pl'], k['player'].lower()))
         result = []
         for player in players:
-            result.append({'player': player['player'], 'total': player['total'],
+            result.append({'player': player['player'], 'total': player['total'], 'pw': player['pw'], 'pd': player['pd'],
+                           'pl': player['pl'], 'rw': player['rw'], 'rd': player['rd'], 'rl': player['rl'],
                            'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
                            'rt': player['rt'], 'rs': f"{player['rw']}/{player['rd']}/{player['rl']}"})
         return json.dumps(result)
