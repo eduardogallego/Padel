@@ -14,14 +14,14 @@
 }
 
 .draw {
-    background-color: orange !important;
+    background-color: Orange !important;
     color: white !important;
 }
 .lose {
-    background-color: red !important;
+    background-color: Tomato !important;
     color: white !important;
 }
 .win {
-    background-color: green !important;
+    background-color: MediumSeaGreen !important;
     color: white !important;
 }

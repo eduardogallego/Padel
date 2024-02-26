@@ -82,7 +82,7 @@ function footResults(data) {
             labels: ["win", "draw", "lose"],
             datasets: [{
                 data: [win, draw, lose],
-                backgroundColor: ['green', 'orange', 'red'],
+                backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
                 hoverOffset: 5
             }],
         },
