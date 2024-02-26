@@ -95,7 +95,8 @@ function footResults(data) {
 
 function formatterDate(value, row) {
     var date = new Date(value)
-    return date.getDate() + "-" + (date.getMonth() + 1);
+    var month = date.toLocaleString('default', {month: 'short'});
+    return date.getDate() + " " + month[0].toUpperCase() + month.slice(1);
 }
 
 function swapButton(){
