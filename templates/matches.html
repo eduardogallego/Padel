@@ -2,14 +2,16 @@
 
 {% block body %}
 <canvas id="chartId" aria-label="chart" height="300" width="380"></canvas>
-<table class="table-borderless" data-search="true" data-show-footer="true" data-toggle="table" data-url="matches.json">
+<table class="table-borderless" data-filter-control="true" data-search="true"
+       data-show-footer="true" data-toggle="table" data-url="matches.json">
   <thead>
     <tr>
-      <th data-cell-style="cellStyleMatchResult" data-field="date" data-footer-formatter="footItemCountFormatter"
-          data-formatter="formatterDate" data-sortable="true">D</th>
-      <th data-cell-style="cellStyleMatchResult" data-field="partner"
+      <th data-cell-style="cellStyleMatchResult" data-field="date" data-filter-control="input"
+          data-footer-formatter="footItemCountFormatter" data-formatter="formatterDate" data-sortable="true">D</th>
+      <th data-cell-style="cellStyleMatchResult" data-field="partner" data-filter-control="select"
           data-footer-formatter="footResults" data-sortable="true">Partner</th>
-      <th data-cell-style="cellStyleMatchResult" data-field="rivals" data-sortable="true">Rivals</th>
+      <th data-cell-style="cellStyleMatchResult" data-field="rivals"
+          data-filter-control="select" data-sortable="true">Rivals</th>
     </tr>
   </thead>
 </table>

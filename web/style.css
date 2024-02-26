@@ -16,6 +16,26 @@ html {
     margin: 3px !important;
 }
 
+.bootstrap-table-filter-control-date {
+    width: 60px !important;
+}
+
+.bootstrap-table-filter-control-partner {
+    width: 130px !important;
+}
+
+.bootstrap-table-filter-control-rivals {
+    width: 220px !important;
+}
+
+.form-control {
+    padding: 0.35rem !important;
+}
+
+.form-select {
+    padding: 0.35rem !important;
+}
+
 .draw {
     background-color: Orange !important;
     color: white !important;
