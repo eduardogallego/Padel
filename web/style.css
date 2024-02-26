@@ -1,5 +1,9 @@
 html {
-    font-size: 15px;
+    font-size: 16px;
+}
+
+.table-borderless {
+    font-size: 1rem !important;
 }
 
 .table-borderless > tbody > tr > td,
@@ -12,28 +16,34 @@ html {
     padding: 3px;
 }
 
+.th-inner {
+    padding: 0.35rem !important;
+}
+
 .bootstrap-table {
     margin: 3px !important;
 }
 
 .bootstrap-table-filter-control-date {
-    width: 60px !important;
+    width: 55px !important;
 }
 
 .bootstrap-table-filter-control-partner {
-    width: 130px !important;
+    width: 110px !important;
 }
 
 .bootstrap-table-filter-control-rivals {
-    width: 220px !important;
+    width: 110px !important;
 }
 
 .form-control {
-    padding: 0.35rem !important;
+    font-size: 0.8rem !important;
+    padding: 0.3rem 0.1rem !important;
 }
 
 .form-select {
-    padding: 0.35rem !important;
+    font-size: 0.8rem !important;
+    padding: 0.3rem 0.1rem !important;
 }
 
 .draw {

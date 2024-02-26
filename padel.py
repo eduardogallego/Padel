@@ -314,6 +314,12 @@ def player_form():
     return render_template("player_form.html")
 
 
+@app.route('/player_list.json', methods=['GET'])
+@login_required
+def player_list_json():
+    return database.get_player_list_json()
+
+
 @app.route('/players', methods=['GET'])
 @login_required
 def players():

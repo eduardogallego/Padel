@@ -45,6 +45,15 @@ class Database:
             result[row[0]] = row[1]
         return result
 
+    def get_player_list_json(self):
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT name FROM players ORDER BY name')
+        rows = cursor.fetchall()
+        players = {}
+        for row in rows:
+            players[row[0]] = row[0]
+        return json.dumps(players)
+
     def get_players_json(self):
         cursor = self.connection.cursor()
         cursor.execute('SELECT id, name FROM players')
