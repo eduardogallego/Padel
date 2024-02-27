@@ -294,6 +294,12 @@ def matches_json():
     return database.get_matches()
 
 
+@app.route('/partner_list.json', methods=['GET'])
+@login_required
+def partner_list_json():
+    return database.get_partner_list_json()
+
+
 @app.route('/player_action', methods=['POST'])
 @login_required
 def player_action():
@@ -314,12 +320,6 @@ def player_form():
     return render_template("player_form.html")
 
 
-@app.route('/player_list.json', methods=['GET'])
-@login_required
-def player_list_json():
-    return database.get_player_list_json()
-
-
 @app.route('/players', methods=['GET'])
 @login_required
 def players():
@@ -330,6 +330,12 @@ def players():
 @login_required
 def players_json():
     return database.get_players_json()
+
+
+@app.route('/rival_list.json', methods=['GET'])
+@login_required
+def rival_list_json():
+    return database.get_rival_list_json()
 
 
 @app.route('/favicon.ico', methods=['GET'])

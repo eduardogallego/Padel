@@ -45,9 +45,19 @@ class Database:
             result[row[0]] = row[1]
         return result
 
-    def get_player_list_json(self):
+    def get_partner_list_json(self):
         cursor = self.connection.cursor()
-        cursor.execute('SELECT name FROM players ORDER BY name')
+        cursor.execute('SELECT DISTINCT p.name FROM players p INNER JOIN matches m ON p.id = m.partner ORDER BY name')
+        rows = cursor.fetchall()
+        players = {}
+        for row in rows:
+            players[row[0]] = row[0]
+        return json.dumps(players)
+
+    def get_rival_list_json(self):
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT name FROM players WHERE id IN '
+                       '(SELECT rival1 FROM matches UNION SELECT rival2 FROM matches) ORDER BY name')
         rows = cursor.fetchall()
         players = {}
         for row in rows:
