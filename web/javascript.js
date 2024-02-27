@@ -1,4 +1,5 @@
 var chartId;
+var lastResult;
 
 function cellStylePartnerResult(value, row, index) {
     var result = '';
@@ -72,25 +73,29 @@ function footResults(data) {
             lose += 1;
         }
     });
-    var chart = document.getElementById("chartId").getContext("2d");
-    if (chartId) {
-        chartId.destroy()
-    }
-    chartId = new Chart(chart, {
-        type: 'pie',
-        data: {
-            labels: ["win", "draw", "lose"],
-            datasets: [{
-                data: [win, draw, lose],
-                backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
-                hoverOffset: 5
-            }],
-        },
-        options: {
-            responsive: false
+    result = win + " / " + draw + " / " + lose;
+    if (lastResult !== result) {
+        var chart = document.getElementById("chartId").getContext("2d");
+        if (chartId) {
+            chartId.destroy()
         }
-    });
-    return win + " / " + draw + " / " + lose;
+        chartId = new Chart(chart, {
+            type: 'pie',
+            data: {
+                labels: ["win", "draw", "lose"],
+                datasets: [{
+                    data: [win, draw, lose],
+                    backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
+                    hoverOffset: 5
+                }],
+            },
+            options: {
+                responsive: false
+            }
+        });
+        lastResult = result;
+    }
+    return result;
 }
 
 function formatterDate(value, row) {
