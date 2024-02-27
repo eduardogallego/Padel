@@ -7,7 +7,7 @@ function cellStylePartnerResult(value, row, index) {
     if (sum > 0) {
         result = 'win';
     } else if (sum < 0) {
-        result = 'lose';
+        result = 'loss';
     } else if ((row.pw + row.pd + row.pl) > 0) {
         result = 'draw';
     }
@@ -22,7 +22,7 @@ function cellStylePlayerResult(value, row, index) {
     if (sum > 0) {
         result = 'win';
     } else if (sum < 0) {
-        result = 'lose';
+        result = 'loss';
     } else if (row.total > 0) {
         result = 'draw';
     }
@@ -37,7 +37,7 @@ function cellStyleRivalResult(value, row, index) {
     if (sum > 0) {
         result = 'win';
     } else if (sum < 0) {
-        result = 'lose';
+        result = 'loss';
     } else if ((row.rw + row.rd + row.rl) > 0) {
         result = 'draw';
     }
@@ -49,7 +49,7 @@ function cellStyleRivalResult(value, row, index) {
 function cellStyleMatchResult(value, row, index) {
     var result = 'draw';
     if (row.result != null) {
-        result = row.result == 1 ? 'win' : 'lose';
+        result = row.result == 1 ? 'win' : 'loss';
     }
     return {
         classes: result
@@ -62,7 +62,7 @@ function footItemCountFormatter(data) {
 
 function footResults(data) {
     var win = 0;
-    var lose = 0
+    var loss = 0
     var draw = 0;
     data.forEach(function(data) {
         if (data.result == null) {
@@ -70,10 +70,10 @@ function footResults(data) {
         } else if (data.result == 1) {
             win += 1;
         } else {
-            lose += 1;
+            loss += 1;
         }
     });
-    result = win + " / " + draw + " / " + lose;
+    result = win + " / " + draw + " / " + loss;
     if (lastResult !== result) {
         var chart = document.getElementById("chartId").getContext("2d");
         if (chartId) {
@@ -82,9 +82,9 @@ function footResults(data) {
         chartId = new Chart(chart, {
             type: 'pie',
             data: {
-                labels: ["win", "draw", "lose"],
+                labels: ["win", "draw", "loss"],
                 datasets: [{
-                    data: [win, draw, lose],
+                    data: [win, draw, loss],
                     backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
                     hoverOffset: 5
                 }],
