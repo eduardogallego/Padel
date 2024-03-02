@@ -76,6 +76,7 @@ function footResults(data) {
     result = win + " / " + draw + " / " + loss;
     if (lastResult !== result) {
         var chart = document.getElementById("chartId").getContext("2d");
+        var total = win + draw + loss;
         if (chartId) {
             chartId.destroy()
         }
@@ -84,13 +85,21 @@ function footResults(data) {
             data: {
                 labels: ["win", "draw", "loss"],
                 datasets: [{
-                    data: [win, draw, loss],
+                    data: [(win * 100 / total).toFixed(1), (draw * 100 / total).toFixed(1),
+                    (loss * 100 / total).toFixed(1)],
                     backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
                     hoverOffset: 5
                 }],
             },
             options: {
-                responsive: false
+                responsive: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "bottom",
+                        align: "center"
+                    }
+                }
             }
         });
         lastResult = result;

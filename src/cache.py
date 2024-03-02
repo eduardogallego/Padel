@@ -39,7 +39,7 @@ class Cache:
         for scheduled_event in self.scheduled_events.values():
             if not scheduled_event.get('error'):
                 timestamp = datetime.strptime(scheduled_event['timestamp'], '%Y-%m-%d %H')
-                Scheduler(timestamp, scheduled_event['court'], self).start()
+                Scheduler(timestamp, scheduled_event['court'], scheduled_event['weekly'], self).start()
 
     def _update_scheduled_events_file(self):
         with open(config.get('scheduled_events_file'), 'w') as outfile:
@@ -49,10 +49,10 @@ class Cache:
         month_id = date.strftime('%Y-%m')
         self.reservations[month_id] = reservations
 
-    def add_scheduled_event(self, timestamp, court):
-        event_id = '%s_%d' % (timestamp.strftime('fut_%Y-%m-%dT%H:%M:%S'), court)
+    def add_scheduled_event(self, timestamp, court, weekly):
+        event_id = f"{timestamp.strftime('fut_%Y-%m-%dT%H:%M:%S')}_{court}"
         self.scheduled_events[event_id] = \
-            {"id": event_id, "timestamp": timestamp.strftime('%Y-%m-%d %H'), "court": court}
+            {"id": event_id, "timestamp": timestamp.strftime('%Y-%m-%d %H'), "court": court, "weekly": weekly}
         self._update_scheduled_events_file()
         return event_id
 
@@ -76,6 +76,7 @@ class Cache:
                 "start": event_start.strftime('%Y-%m-%dT%H:%M:%S'),
                 "end": (event_start + timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S'),
                 "title": str(scheduled_event['court']),
+                "weekly": scheduled_event['weekly'],
                 "error": scheduled_event['error'] if 'error' in scheduled_event else None,
                 "color": "#dc3545" if 'error' in scheduled_event else "#198754"}
 
@@ -99,4 +100,4 @@ class Cache:
         return event_id in self.scheduled_events
 
     def set_scheduled_event_error(self, event_id, error):
-        self.scheduled_events[event_id]['error'] = 'Error: %s' % error
+        self.scheduled_events[event_id]['error'] = f"Error: {error}"

@@ -146,6 +146,12 @@
         </div>
     </div>
     <br>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="weekly" name="weekly" {{ "checked" if weekly == true }}>
+        <label class="form-check-label" for="weekly">Weekly</label>
+    </div>
+    <br>
     {% if error %}
         {% block error %}
             <div class="alert alert-danger" role="alert">{{ error }}</div>

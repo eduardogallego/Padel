@@ -13,32 +13,34 @@ api_client = ApiClient(config)
 
 
 class Scheduler(Thread):
-    def __init__(self, timestamp, court, cache):
+    def __init__(self, timestamp, court, weekly, cache):
         Thread.__init__(self)
         self.event_id = 'unknown'
         self.timestamp = timestamp
         self.court = court
+        self.weekly = weekly
         self.cache = cache
 
     def run(self):
-        self.event_id = self.cache.add_scheduled_event(self.timestamp, self.court)
+        self.event_id = self.cache.add_scheduled_event(self.timestamp, self.court, self.weekly)
         now = datetime.now()
         delta = self.timestamp - now - timedelta(hours=24)
         if delta.total_seconds() < 0:
             if now < self.timestamp:  # still in range
                 error = api_client.reserve_court(timestamp=self.timestamp, court=self.court)
                 if error:
-                    logger.error('Court %d %s, Error: %s'
-                                 % (self.court, self.timestamp.strftime('%m-%d %H'), error))
+                    logger.error(f"Court {self.court} {self.timestamp.strftime('%m-%d %H')}, Error: {error}")
                     self.cache.set_scheduled_event_error(self.event_id, error)
                 else:
                     self.cache.delete_scheduled_event(self.event_id)
                     self.cache.delete_reservations(self.timestamp)
+                    if self.weekly:
+                        Scheduler(timestamp=self.timestamp + timedelta(days=7), court=self.court,
+                                  weekly=self.weekly, cache=self.cache).start()
                 return
             else:  # event in the past
                 error = "Timestamp in the past. Event not booked."
-                logger.error('Court %d %s, Error: %s'
-                             % (self.court, self.timestamp.strftime('%m-%d %H'), error))
+                logger.error(f"Court {self.court} {self.timestamp.strftime('%m-%d %H')}, Error: {error}")
                 self.cache.set_scheduled_event_error(self.event_id, error)
                 return
         sleep_delta = None
@@ -54,8 +56,8 @@ class Scheduler(Thread):
                     sleep_delta = delta % timedelta(hours=1)
                 else:
                     sleep_delta = delta % timedelta(minutes=1)
-            logger.info('Court %d %s, Delta %s, Sleep %s'
-                        % (self.court, self.timestamp.strftime('%Y-%m-%d %H'), delta, sleep_delta))
+            logger.info(f"Court {self.court} {self.timestamp.strftime('%Y-%m-%d %H')}, "
+                        f"Delta {delta}, Sleep {sleep_delta}")
             time.sleep(sleep_delta.total_seconds())
             delta = self.timestamp - datetime.now() - timedelta(hours=24)
 
@@ -94,6 +96,9 @@ class Scheduler(Thread):
         if reservations:
             self.cache.delete_scheduled_event(self.event_id)
             self.cache.delete_reservations(self.timestamp)
+            if self.weekly:
+                Scheduler(timestamp=self.timestamp + timedelta(days=7), court=self.court,
+                          weekly=self.weekly, cache=self.cache).start()
         else:
             self.cache.set_scheduled_event_error(self.event_id, requests[-1].error)
         if len(reservations) > 1:
@@ -115,9 +120,9 @@ class Request(Thread):
         if delta.total_seconds() < 0:
             self.error = 'Negative delta'
         else:
-            logger.info('Court %d %s, Delta %s, Offset: %s, Delay: %s'
-                        % (self.court, self.timestamp.strftime('%Y-%m-%d %H'), delta, self.offset_sec, self.delay_sec))
+            logger.info(f"Court {self.court} {self.timestamp.strftime('%Y-%m-%d %H')}, Delta "
+                        f"{delta}, Offset: {self.offset_sec}, Delay: {self.delay_sec}")
             time.sleep(delta.total_seconds())
             self.error = api_client.reserve_court(timestamp=self.timestamp, court=self.court)
-        logger.info('Court %d %s, Offset: %s, Delay: %s, Error: %s'
-                    % (self.court, self.timestamp.strftime('%m-%d %H'), self.offset_sec, self.delay_sec, self.error))
+        logger.info(f"Court {self.court} {self.timestamp.strftime('%m-%d %H')}, Offset: "
+                    f"{self.offset_sec}, Delay: {self.delay_sec}, Error: {self.error}")

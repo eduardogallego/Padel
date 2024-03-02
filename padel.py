@@ -45,11 +45,11 @@ def login_action():
     form_password = request.form['password']
     if user.get_user_name() == form_user and user.login(form_password) \
             and login_user(user=user, remember=True, duration=timedelta(days=30)):
-        logger.info("User %s authenticated" % form_user)
+        logger.info(f"User {form_user} authenticated")
         return redirect("/matches")
     else:
         user.logout()
-        logger.warning("Authentication error %s %s" % (form_user, form_password))
+        logger.warning(f"Authentication error {form_user} {form_password}")
         return render_template("login_form.html", error="Authentication error: wrong user/pwd")
 
 
@@ -110,7 +110,7 @@ def events():
     for court_status_thread in court_status_threads:
         court_status_thread.join()
         if court_status_thread.court_status is None:
-            logger.warning("Court Status %s == None" % court_status_thread.request_date.strftime('%Y-%m-%d'))
+            logger.warning(f"Court Status {court_status_thread.request_date.strftime('%Y-%m-%d')} == None")
             continue
         booked_events = []
         for hour, available in court_status_thread.court_status.items():
@@ -183,9 +183,10 @@ def booking_form(booking_time):
 def booking_action():
     form_date = request.form['booking_date']
     form_time = request.form['booking_time']
-    form_datetime = '%s %s' % (form_date, form_time)
+    form_datetime = f"{form_date} {form_time}"
     timestamp = datetime.strptime(form_datetime, '%Y-%m-%d %H:%M')
     form_court = request.form['court']
+    form_weekly = 'weekly' in request.form
     if form_court == 'Court 1':
         court = 1
     elif form_court == 'Court 2':
@@ -197,27 +198,30 @@ def booking_action():
     # schedule future events
     if timestamp > now + timedelta(days=1):
         if court is None:
-            Scheduler(timestamp=timestamp, court=1, cache=cache).start()
-            Scheduler(timestamp=timestamp, court=2, cache=cache).start()
+            Scheduler(timestamp=timestamp, court=1, weekly=form_weekly, cache=cache).start()
+            Scheduler(timestamp=timestamp, court=2, weekly=form_weekly, cache=cache).start()
         else:
-            Scheduler(timestamp=timestamp, court=court, cache=cache).start()
-        return redirect("/calendar/%s" % timestamp.strftime('%Y-%m-%d'))
+            Scheduler(timestamp=timestamp, court=court, weekly=form_weekly, cache=cache).start()
+        return redirect(f"/calendar/{timestamp.strftime('%Y-%m-%d')}")
 
     # book events in range
     if timestamp < now:
         error = 'La fecha de la reserva debe ser mayor a la actual'
-        return render_template("booking_form.html", booking_date=form_date,
-                               booking_time=form_time, court=form_court, error=error)
+        return render_template("booking_form.html", booking_date=form_date, booking_time=form_time,
+                               court=form_court, weekly=form_weekly, error=error)
     else:
         for court_id in [1, 2]:
             if court is None or court == court_id:
                 error = api_client.reserve_court(timestamp=timestamp, court=court_id)
                 if error:
-                    return render_template("booking_form.html", booking_date=form_date,
-                                           booking_time=form_time, court=form_court, error=error)
+                    return render_template("booking_form.html", booking_date=form_date, booking_time=form_time,
+                                           court=form_court, weekly=form_weekly, error=error)
                 else:
                     cache.delete_reservations(timestamp)
-    return redirect("/calendar/%s" % timestamp.strftime('%Y-%m-%d'))
+                    if form_weekly:
+                        Scheduler(timestamp=timestamp + timedelta(days=7), court=court,
+                                  weekly=form_weekly, cache=cache).start()
+    return redirect(f"/calendar/{timestamp.strftime('%Y-%m-%d')}")
 
 
 @app.route('/delete_form/<event_id>', methods=['GET'])
@@ -245,7 +249,7 @@ def delete_action():
         else:
             timestamp = datetime.strptime(request.form['booking_date'], '%Y-%m-%d')
             cache.delete_reservations(timestamp)
-    return redirect("/calendar/%s" % request.form['booking_date'])
+    return redirect(f"/calendar/{request.form['booking_date']}")
 
 
 @app.route('/match_action', methods=['POST'])

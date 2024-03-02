@@ -53,7 +53,7 @@ class ApiClient:
         response = self.session.post('https://api.iesa.es/tcsecurity/api/v1/login', json=requests_dict)
         if response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Login %s error (%d ms) %d - %s' % (user, delta, response.status_code, response.reason))
+            self.logger.error(f"Login {user} error ({delta} ms) {response.status_code} - {response.reason}")
             return False
         response_dict = json.loads(response.text)
         self.token = response_dict['Token']
@@ -62,7 +62,7 @@ class ApiClient:
         with open(self.config.get('credentials_file'), 'w') as outfile:
             json.dump({'token': self.token, 'token_expiration_date': self.token_expiration_date}, outfile)
         delta = (time.time() * 1000) - ini_tt
-        self.logger.info('Login %s (%d ms)' % (user, delta))
+        self.logger.info(f"Login {user} ({delta} ms)")
         return True
 
     def check_credentials(self):
@@ -82,8 +82,8 @@ class ApiClient:
             return self.get_court_status(court, date, True)
         elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Get court %d status %s error (%d ms): %d - %s'
-                              % (court, date_str, delta, response.status_code, response.reason))
+            self.logger.error(f"Get court {court} status {date_str} error ({delta} ms): "
+                              f"{response.status_code} - {response.reason}")
             return None
         court_dict = json.loads(response.text.encode().decode('utf-8-sig'))
         status_dict = {}
@@ -91,7 +91,7 @@ class ApiClient:
             block = datetime.strptime(data['fromHour'], '%d/%m/%Y %H:%M:%S')  # 25/03/2023 10:00:00
             status_dict[block.strftime('%H')] = data['avalaibleCapacity']
         delta = (time.time() * 1000) - ini_tt
-        self.logger.info('Get court %d status %s (%d ms)' % (court, date_str, delta))
+        self.logger.info(f"Get court {court} status {date_str} ({delta} ms)")
         return status_dict
 
     def get_month_reservations(self, date, retry=False):
@@ -111,12 +111,12 @@ class ApiClient:
             return self.get_month_reservations(date, True)
         elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Get month %s reservations error (%d ms) %d - %s'
-                              % (date_str, delta, response.status_code, response.reason))
+            self.logger.error(f"Get month {date_str} reservations error ({delta} ms) "
+                              f"{response.status_code} - {response.reason}")
             return None
         response_dict = json.loads(response.text.encode().decode('utf-8-sig'))
         delta = (time.time() * 1000) - ini_tt
-        self.logger.info('Get month %s reservations (%d ms)' % (date_str, delta))
+        self.logger.info(f"Get month {date_str} reservations ({delta} ms)")
         return response_dict['data']
 
     def reserve_court(self, timestamp, court, retry=False):
@@ -132,43 +132,41 @@ class ApiClient:
         response = self.session.post(self.config.get('court_booking_url'), json=request_dict, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
-            return self.reserve_court(timestamp, court, True)
+            return self.reserve_court(timestamp, court, retry=True)
         elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Reserve court %d %s error (%d ms) %d - %s'
-                              % (court, timestamp.strftime('%Y-%m-%d %H'), delta,
-                                 response.status_code, response.reason))
+            self.logger.error(f"Reserve court {court} {timestamp.strftime('%Y-%m-%d %H')} error "
+                              f"({delta} ms) {response.status_code} - {response.reason}")
             return response.reason
         response_dict = json.loads(response.text.encode().decode('utf-8-sig'))
         if response_dict['code'] == 4:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Reserve court %d %s error (%d ms) %d - %s'
-                              % (court, timestamp.strftime('%Y-%m-%d %H'), delta,
-                                 response_dict['code'], response_dict['message']))
+            self.logger.error(f"Reserve court {court} {timestamp.strftime('%Y-%m-%d %H')} error "
+                              f"({delta} ms) {response_dict['code']} - {response_dict['message']}")
             return response_dict['message']
         delta = (time.time() * 1000) - ini_tt
-        self.logger.info('Reserve court %d %s (%d ms)' % (court, timestamp.strftime('%Y-%m-%d %H'), delta))
+        self.logger.info(f"Reserve court {court} {timestamp.strftime('%Y-%m-%d %H')} ({delta} ms)")
         return None
 
     def delete_reservation(self, booking_id, retry=False):
         ini_tt = time.time() * 1000
         self.check_credentials()
-        url = '%s/%s' % (self.config.get('court_booking_url'), booking_id)
+        url = f"{self.config.get('court_booking_url')}/{booking_id}"
         response = self.session.delete(url, headers=self.headers)
         if response.status_code == 401 and not retry:
             self.token = None
             return self.delete_reservation(booking_id, True)
         elif response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Delete reservation %s error (%d ms) %d - %s'
-                              % (booking_id, delta, response.status_code, response.reason))
+            self.logger.error(f"Delete reservation {booking_id} error ({delta} ms) "
+                              f"{response.status_code} - {response.reason}")
             return response.reason
         response_dict = json.loads(response.text.encode().decode('utf-8-sig'))
         if response_dict['code'] == 4:
             delta = (time.time() * 1000) - ini_tt
-            self.logger.error('Delete reservation %s error (%d ms) %d - %s'
-                              % (booking_id, delta, response_dict['code'], response_dict['message']))
+            self.logger.error(f"Delete reservation {booking_id} error ({delta} ms) "
+                              f"{response_dict['code']} - {response_dict['message']}")
             return response_dict['message']
         delta = (time.time() * 1000) - ini_tt
-        self.logger.info('Delete reservation %s (%d ms)' % (booking_id, delta))
+        self.logger.info(f"Delete reservation {booking_id} ({delta} ms)")
         return None
