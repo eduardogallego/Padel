@@ -267,9 +267,9 @@ def match_action():
         rival1 = rival_a if rival_a < rival_b else rival_b
         rival2 = rival_b if rival_a < rival_b else rival_a
     result = True if request.form['result'] == "1" else False if request.form['result'] == "0" else None
-    if (rival1 == 0 and rival2 == 0) or (partner == 0 and rival1 != 0 and rival2 != 0):
+    if (rival1 is None and rival2 is None) or (partner is None and rival1 and rival2):
         error = 'Missing players'
-    elif partner > 0 and (partner == rival1 or partner == rival2 or rival1 == rival2):
+    elif (partner and (partner == rival1 or partner == rival2)) or (rival1 == rival2):
         error = 'Repeated players'
     elif database.insert_match(match_date, partner, rival1, rival2, result) != 1:
         error = 'Wrong match parameters'
