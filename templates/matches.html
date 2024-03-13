@@ -1,6 +1,7 @@
 {% extends "stats_base.html" %}
 
 {% block body %}
+<canvas id="chart10Id" aria-label="chart" height="300" width="380"></canvas>
 <canvas id="chartId" aria-label="chart" height="300" width="380"></canvas>
 <table class="table-borderless" data-filter-control="true" data-search="true"
        data-show-footer="true" data-toggle="table" data-url="matches.json">
@@ -12,7 +13,8 @@
           data-filter-data="url:/partner_list.json" data-filter-strict-search="false"
           data-footer-formatter="footResults" data-sortable="true">Partner</th>
       <th data-cell-style="cellStyleMatchResult" data-field="rivals" data-filter-control="select"
-          data-filter-data="url:/rival_list.json" data-filter-strict-search="false" data-sortable="true">Rivals</th>
+          data-filter-data="url:/rival_list.json" data-filter-strict-search="false"
+          data-footer-formatter="foot10Results" data-sortable="true">Rivals</th>
     </tr>
   </thead>
 </table>

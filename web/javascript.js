@@ -1,5 +1,7 @@
 var chartId;
+var chart10Id;
 var lastResult;
+var last10Result;
 
 function cellStylePartnerResult(value, row, index) {
     var result = '';
@@ -103,6 +105,57 @@ function footResults(data) {
             }
         });
         lastResult = result;
+    }
+    return result;
+}
+
+function foot10Results(data) {
+    var win = 0;
+    var loss = 0
+    var draw = 0;
+    var counter = 0;
+    data.forEach(function(data) {
+        if (counter < 10) {
+            if (data.result == null) {
+                draw += 1;
+            } else if (data.result == 1) {
+                win += 1;
+            } else {
+                loss += 1;
+            }
+        }
+        counter += 1;
+    });
+    result = win + " / " + draw + " / " + loss;
+    if (last10Result !== result) {
+        var chart = document.getElementById("chart10Id").getContext("2d");
+        var total = win + draw + loss;
+        if (chart10Id) {
+            chart10Id.destroy()
+        }
+        chart10Id    = new Chart(chart, {
+            type: 'pie',
+            data: {
+                labels: ["win", "draw", "loss"],
+                datasets: [{
+                    data: [(win * 100 / total).toFixed(1), (draw * 100 / total).toFixed(1),
+                    (loss * 100 / total).toFixed(1)],
+                    backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
+                    hoverOffset: 5
+                }],
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "bottom",
+                        align: "center"
+                    }
+                }
+            }
+        });
+        last10Result = result;
     }
     return result;
 }
