@@ -1,5 +1,5 @@
 html {
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .table-borderless {
@@ -13,7 +13,11 @@ html {
 .table-borderless > thead > tr > td,
 .table-borderless > thead > tr > th {
     border: none;
-    padding: 3px;
+    padding: 0px 3px 0px 0px;
+}
+
+.sticky-bottom {
+    bottom: 8px !important;
 }
 
 .th-inner {
@@ -25,15 +29,25 @@ html {
 }
 
 .bootstrap-table-filter-control-date {
-    width: 55px !important;
+    width: 40px !important;
 }
 
 .bootstrap-table-filter-control-partner {
-    width: 110px !important;
+    width: 95px !important;
 }
 
 .bootstrap-table-filter-control-rivals {
-    width: 110px !important;
+    width: 95px !important;
+}
+
+.bootstrap-table .fixed-table-container .table thead th .sortable {
+    padding-right: 25px!important;
+}
+
+.index {
+    padding-right: 8px !important;
+    text-align: right;
+    width: 30px;
 }
 
 .form-control {

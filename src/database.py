@@ -29,11 +29,13 @@ class Database:
                        "FROM matches AS m LEFT JOIN players AS p ON m.partner = p.id "
                        "LEFT JOIN players AS r1 ON m.rival1 = r1.id "
                        "LEFT JOIN players AS r2 ON m.rival2 = r2.id "
-                       "ORDER BY m.match_date DESC")
+                       "ORDER BY m.id DESC")
         rows = cursor.fetchall()
         result = []
+        index = 0
         for row in rows:
-            result.append({"date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})
+            index += 1
+            result.append({"index": index, "date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})
         return json.dumps(result)
 
     def get_players(self):
@@ -70,8 +72,8 @@ class Database:
         rows = cursor.fetchall()
         players = {}
         for row in rows:
-            players[int(row[0])] = {"player": row[1], "total": 0, "pt": 0, "pw": 0, "pd": 0,
-                                    "pl": 0, "rt": 0, "rw": 0, "rd": 0, "rl": 0}
+            players[int(row[0])] = {"player": row[1], "total": 0, "pt": 0, "pw": 0, "pd": 0, "pl": 0,
+                                    "rt": 0, "rw": 0, "rd": 0, "rl": 0, "tw": 0, "td": 0, "tl": 0, }
         cursor.execute('SELECT partner, rival1, rival2, result FROM matches')
         rows = cursor.fetchall()
         for row in rows:
@@ -85,10 +87,13 @@ class Database:
                 player['pt'] += 1
                 if result is None:
                     player['pd'] += 1
+                    player['td'] += 1
                 elif result:
                     player['pw'] += 1
+                    player['tw'] += 1
                 else:
                     player['pl'] += 1
+                    player['tl'] += 1
             for rival in [rival1, rival2]:
                 if rival is not None:
                     player = players[rival]
@@ -96,16 +101,22 @@ class Database:
                     player['rt'] += 1
                     if result is None:
                         player['rd'] += 1
+                        player['td'] += 1
                     elif result:
                         player['rw'] += 1
+                        player['tw'] += 1
                     else:
                         player['rl'] += 1
+                        player['tl'] += 1
         players = list(players.values())
-        players = sorted(players, key=lambda k: (-k['total'], -k['pw'], -k['pd'], -k['pl'], k['player'].lower()))
+        players = sorted(players, key=lambda k: (-k['total'], -k['tw'], -k['td'], -k['tl'], k['player'].lower()))
         result = []
+        index = 0
         for player in players:
-            result.append({'player': player['player'], 'total': player['total'], 'pw': player['pw'], 'pd': player['pd'],
-                           'pl': player['pl'], 'rw': player['rw'], 'rd': player['rd'], 'rl': player['rl'],
+            index += 1
+            result.append({'index': index, 'player': player['player'], 'total': player['total'],
+                           'pw': player['pw'], 'pd': player['pd'], 'pl': player['pl'],
+                           'rw': player['rw'], 'rd': player['rd'], 'rl': player['rl'],
                            'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
                            'rt': player['rt'], 'rs': f"{player['rw']}/{player['rd']}/{player['rl']}"})
         return json.dumps(result)

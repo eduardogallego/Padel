@@ -33,6 +33,21 @@ function cellStylePlayerResult(value, row, index) {
     }
 }
 
+function cellStyleIndexPlayerResult(value, row, index) {
+    var result = '';
+    var sum = row.pw + row.rw - row.pl - row.rl;
+    if (sum > 0) {
+        result = 'win';
+    } else if (sum < 0) {
+        result = 'loss';
+    } else if (row.total > 0) {
+        result = 'draw';
+    }
+    return {
+        classes: 'index ' + result
+    }
+}
+
 function cellStyleRivalResult(value, row, index) {
     var result = '';
     var sum = row.rw - row.rl;
@@ -45,6 +60,16 @@ function cellStyleRivalResult(value, row, index) {
     }
     return {
         classes: result
+    }
+}
+
+function cellStyleIndexMatchResult(value, row, index) {
+    var result = 'draw';
+    if (row.result != null) {
+        result = row.result == 1 ? 'win' : 'loss';
+    }
+    return {
+        classes: 'index ' + result
     }
 }
 

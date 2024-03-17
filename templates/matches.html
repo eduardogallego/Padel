@@ -1,12 +1,15 @@
 {% extends "stats_base.html" %}
 
 {% block body %}
-<canvas id="chart10Id" aria-label="chart" height="300" width="380"></canvas>
-<canvas id="chartId" aria-label="chart" height="300" width="380"></canvas>
+<div class="d-flex justify-content-between flex-wrap">
+  <div class="p-2"><canvas id="chart10Id" aria-label="chart" height="300" width="340"></canvas></div>
+  <div class="p-2"><canvas id="chartId" aria-label="chart" height="300" width="340"></canvas></div>
+</div>
 <table class="table-borderless" data-filter-control="true" data-search="true"
        data-show-footer="true" data-toggle="table" data-url="matches.json">
   <thead>
     <tr>
+      <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index" data-sortable="true">#</th>
       <th data-cell-style="cellStyleMatchResult" data-field="date" data-filter-control="input"
           data-footer-formatter="footItemCountFormatter" data-formatter="formatterDate" data-sortable="true">D</th>
       <th data-cell-style="cellStyleMatchResult" data-field="partner" data-filter-control="select"
