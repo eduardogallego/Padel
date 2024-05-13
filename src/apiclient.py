@@ -126,8 +126,9 @@ class ApiClient:
         request_dict = {'dtInicioReserva': timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
                         'dtFinReserva': booking_end.strftime('%Y-%m-%dT%H:%M:%S'),
                         'idUsuario': self.config.get('user_id'),
-                        'impPrecio': '0', 'idComunidad': '4100059', 'idProperty': '16288528',
-                        'numYoungBooking': 0, 'numOldBooking': 0, 'blUserIncluded': '1',
+                        'idComunidad': self.config.get('community_id'),
+                        'idProperty': self.config.get('property_id'),
+                        'impPrecio': '0', 'numYoungBooking': 0, 'numOldBooking': 0, 'blUserIncluded': '1',
                         'idElementoComun': self.config.get('court1_id') if court == 1 else self.config.get('court2_id')}
         response = self.session.post(self.config.get('court_booking_url'), json=request_dict, headers=self.headers)
         if response.status_code == 401 and not retry:
