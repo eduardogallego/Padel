@@ -286,16 +286,23 @@ def match_form():
                            rival1=0, rival2=0, result="1", players=database.get_players())
 
 
-@app.route('/matches', methods=['GET'])
+@app.route('/matches', methods=['GET', 'POST'])
 @login_required
 def matches():
-    return render_template("matches.html")
+    player1 = None if not request.form or request.form['player1'] == '0' else int(request.form['player1'])
+    player2 = None if not request.form or request.form['player2'] == '0' else int(request.form['player2'])
+    player3 = None if not request.form or request.form['player3'] == '0' else int(request.form['player3'])
+    return render_template("matches.html", player1=player1, player2=player2,
+                           player3=player3, players=database.get_players())
 
 
 @app.route('/matches.json', methods=['GET'])
 @login_required
 def matches_json():
-    return database.get_matches()
+    player1 = request.args.get('player1', type=int)
+    player2 = request.args.get('player2', type=int)
+    player3 = request.args.get('player3', type=int)
+    return database.get_matches(player1, player2, player3)
 
 
 @app.route('/partner_list.json', methods=['GET'])

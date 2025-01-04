@@ -2,30 +2,72 @@
 
 {% block body %}
 <div class="d-flex justify-content-between flex-wrap">
-  <div class="p-2"><canvas id="chart10Id" aria-label="chart" height="300" width="340"></canvas></div>
-  <div class="p-2"><canvas id="chartId" aria-label="chart" height="300" width="340"></canvas></div>
+    <div class="p-2"><canvas id="chart10Id" aria-label="chart" height="300" width="340"></canvas></div>
+    <div class="p-2"><canvas id="chartId" aria-label="chart" height="300" width="340"></canvas></div>
 </div>
-<table class="table-borderless" data-filter-control="true" data-search="true"
-       data-show-footer="true" data-toggle="table" data-url="matches.json">
-  <thead>
-    <tr>
-      <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index" data-sortable="true">#</th>
-      <th data-cell-style="cellStyleMatchResult" data-field="date" data-filter-control="input"
-          data-footer-formatter="footItemCountFormatter" data-formatter="formatterDate" data-sortable="true">D</th>
-      <th data-cell-style="cellStyleMatchResult" data-field="partner" data-filter-control="select"
-          data-filter-data="url:/partner_list.json" data-filter-strict-search="false"
-          data-footer-formatter="footResults" data-sortable="true">Partner</th>
-      <th data-cell-style="cellStyleMatchResult" data-field="rivals" data-filter-control="select"
-          data-filter-data="url:/rival_list.json" data-filter-strict-search="false"
-          data-footer-formatter="foot10Results" data-sortable="true">Rivals</th>
-    </tr>
-  </thead>
+<table class="table-borderless" data-filter-control="true" data-search="true" data-show-footer="true"
+       data-toggle="table" data-url="matches.json?player1={{ player1 }}&player2={{ player2 }}&player3={{ player3 }}">
+    <thead>
+        <tr>
+            <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index" data-sortable="true">#</th>
+            <th data-cell-style="cellStyleMatchResult" data-field="date" data-filter-control="input"
+              data-footer-formatter="footItemCountFormatter" data-formatter="formatterDate" data-sortable="true">D</th>
+            <th data-cell-style="cellStyleMatchResult" data-field="partner" data-filter-control="select"
+              data-filter-data="url:/partner_list.json" data-filter-strict-search="false"
+              data-footer-formatter="footResults" data-sortable="true">Partner</th>
+            <th data-cell-style="cellStyleMatchResult" data-field="rivals" data-filter-control="select"
+              data-filter-data="url:/rival_list.json" data-filter-strict-search="false"
+              data-footer-formatter="foot10Results" data-sortable="true">Rivals</th>
+        </tr>
+    </thead>
 </table>
+<form action="/matches" class="d-flex justify-content-around align-items-center" method="POST">
+    <div>
+        <label for="player1">Search 1</label>
+        <select class="form-control" id="player1" name="player1">
+            {% for k, v in players.items() %}
+                {% if k == player1 %}
+            <option selected="selected" value="{{ k }}">{{ v }}</option>
+                {% else %}
+            <option value="{{ k }}">{{ v }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="player2">Search 2</label>
+        <select class="form-control" id="player2" name="player2">
+            {% for k, v in players.items() %}
+                {% if k == player2 %}
+            <option selected="selected" value="{{ k }}">{{ v }}</option>
+                {% else %}
+            <option value="{{ k }}">{{ v }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="player3">Search 3</label>
+        <select class="form-control" id="player3" name="player3">
+            {% for k, v in players.items() %}
+                {% if k == player3 %}
+            <option selected="selected" value="{{ k }}">{{ v }}</option>
+                {% else %}
+            <option value="{{ k }}">{{ v }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">search</button>
+        <a href="/matches" class="btn btn-secondary me-md-2">clear</a>
+    </div>
+</form>
 <nav class="navbar sticky-bottom bg-body-primary">
-  <div class="container-fluid">
-    <a href="/calendar" class="btn btn-primary me-md-2">calendar</a>
-    <a href="/players" class="btn btn-primary me-md-2">players</a>
-    <a href="/match_form" class="btn btn-primary me-md-0">add match</a>
-  </div>
+    <div class="container-fluid">
+        <a href="/calendar" class="btn btn-primary me-md-2">calendar</a>
+        <a href="/players" class="btn btn-primary me-md-2">players</a>
+        <a href="/match_form" class="btn btn-primary me-md-0">add match</a>
+    </div>
 </nav>
 {% endblock %}

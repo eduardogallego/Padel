@@ -158,7 +158,7 @@ function foot10Results(data) {
         if (chart10Id) {
             chart10Id.destroy()
         }
-        chart10Id    = new Chart(chart, {
+        chart10Id = new Chart(chart, {
             type: 'pie',
             data: {
                 labels: ["win", "draw", "loss"],
@@ -187,8 +187,10 @@ function foot10Results(data) {
 
 function formatterDate(value, row) {
     var date = new Date(value)
-    var month = date.toLocaleString('default', {month: 'short'});
-    return date.getDate() + " " + month[0].toUpperCase() + month.slice(1);
+    var year = date.toLocaleString('default', {year: '2-digit'});
+    var month = date.toLocaleString('default', {month: '2-digit'});
+    var day = date.toLocaleString('default', {day: '2-digit'});
+    return `${year}/${month}/${day}`;
 }
 
 function swapButton(){

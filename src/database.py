@@ -19,13 +19,13 @@ class Database:
         except Error as e:
             self.logger.exception("Database Error")
 
-    def get_matches(self):
+    def get_matches(self, player1, player2, player3):
         cursor = self.connection.cursor()
         cursor.execute("SELECT m.match_date, p.name, "
                        "CASE WHEN m.rival2 IS NULL THEN r1.name "
                        "WHEN r1.name < r2.name THEN r1.name || ' / ' || r2.name "
                        "ELSE r2.name || ' / ' || r1.name "
-                       "END AS rivals, m.result "
+                       "END AS rivals, m.result, m.partner, m.rival1, m.rival2 "
                        "FROM matches AS m LEFT JOIN players AS p ON m.partner = p.id "
                        "LEFT JOIN players AS r1 ON m.rival1 = r1.id "
                        "LEFT JOIN players AS r2 ON m.rival2 = r2.id "
@@ -34,8 +34,14 @@ class Database:
         result = []
         index = 0
         for row in rows:
-            index += 1
-            result.append({"index": index, "date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})
+            row_found = True
+            for search in [player1, player2, player3]:
+                if search and row[4] != search and row[5] != search and row[6] != search:
+                    row_found = False
+                    break
+            if row_found:
+                index += 1
+                result.append({"index": index, "date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})
         return json.dumps(result)
 
     def get_players(self):
