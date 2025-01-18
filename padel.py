@@ -371,7 +371,7 @@ def players():
 @app.route('/players.json', methods=['GET'])
 @login_required
 def players_json():
-    return database.get_players_json()
+    return database.get_players_json(filter_dict)
 
 
 @app.route('/rival_list.json', methods=['GET'])

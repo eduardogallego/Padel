@@ -77,7 +77,7 @@ class Database:
             players[row[0]] = row[0]
         return json.dumps(players)
 
-    def get_players_json(self):
+    def get_players_json(self, filter_dict):
         cursor = self.connection.cursor()
         cursor.execute('SELECT id, name FROM players')
         rows = cursor.fetchall()
@@ -85,13 +85,25 @@ class Database:
         for row in rows:
             players[int(row[0])] = {"player": row[1], "total": 0, "pt": 0, "pw": 0, "pd": 0, "pl": 0,
                                     "rt": 0, "rw": 0, "rd": 0, "rl": 0, "tw": 0, "td": 0, "tl": 0, }
-        cursor.execute('SELECT partner, rival1, rival2, result FROM matches')
+        cursor.execute('SELECT partner, rival1, rival2, result, match_date FROM matches')
         rows = cursor.fetchall()
         for row in rows:
+            row_found = True
             partner = row[0]
             rival1 = row[1]
             rival2 = row[2]
             result = row[3]
+            date = row[4]
+            for player in [filter_dict['player1'], filter_dict['player2'], filter_dict['player3']]:
+                if player and partner != player and rival1 != player and rival2 != player:
+                    row_found = False
+                    break
+            if filter_dict['year'] and filter_dict['year'] != datetime.strptime(date, '%Y-%m-%d').year:
+                row_found = False
+            if not filter_dict['1on1'] and not partner:
+                row_found = False
+            if not row_found:
+                continue
             if partner is not None:
                 player = players[partner]
                 player['total'] += 1
@@ -121,6 +133,7 @@ class Database:
                         player['tl'] += 1
         players = list(players.values())
         players = sorted(players, key=lambda k: (-k['total'], -k['tw'], -k['td'], -k['tl'], k['player'].lower()))
+        players = [p for p in players if p['total'] > 0]
         result = []
         index = 0
         for player in players:
