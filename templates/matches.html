@@ -21,51 +21,10 @@
         </tr>
     </thead>
 </table>
-<form action="/matches" class="d-flex justify-content-around align-items-center" method="POST">
-    <div>
-        <label for="player1">Search 1</label>
-        <select class="form-control" id="player1" name="player1">
-            {% for k, v in players.items() %}
-                {% if k == player1 %}
-            <option selected="selected" value="{{ k }}">{{ v }}</option>
-                {% else %}
-            <option value="{{ k }}">{{ v }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="player2">Search 2</label>
-        <select class="form-control" id="player2" name="player2">
-            {% for k, v in players.items() %}
-                {% if k == player2 %}
-            <option selected="selected" value="{{ k }}">{{ v }}</option>
-                {% else %}
-            <option value="{{ k }}">{{ v }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="player3">Search 3</label>
-        <select class="form-control" id="player3" name="player3">
-            {% for k, v in players.items() %}
-                {% if k == player3 %}
-            <option selected="selected" value="{{ k }}">{{ v }}</option>
-                {% else %}
-            <option value="{{ k }}">{{ v }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">search</button>
-        <a href="/matches" class="btn btn-secondary me-md-2">clear</a>
-    </div>
-</form>
 <nav class="navbar sticky-bottom bg-body-primary">
     <div class="container-fluid">
         <a href="/calendar" class="btn btn-primary me-md-2">calendar</a>
+        <a href="/filter_form?src=matches" class="btn btn-primary me-md-2">filter</a>
         <a href="/players" class="btn btn-primary me-md-2">players</a>
         <a href="/match_form" class="btn btn-primary me-md-0">add match</a>
     </div>

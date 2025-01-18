@@ -3,6 +3,7 @@ import logging
 import os
 import sqlite3
 
+from datetime import datetime
 from sqlite3 import Error
 from src.utils import Config
 
@@ -19,7 +20,7 @@ class Database:
         except Error as e:
             self.logger.exception("Database Error")
 
-    def get_matches(self, player1, player2, player3):
+    def get_matches(self, filter_dict):
         cursor = self.connection.cursor()
         cursor.execute("SELECT m.match_date, p.name, "
                        "CASE WHEN m.rival2 IS NULL THEN r1.name "
@@ -35,10 +36,14 @@ class Database:
         index = 0
         for row in rows:
             row_found = True
-            for search in [player1, player2, player3]:
-                if search and row[4] != search and row[5] != search and row[6] != search:
+            for player in [filter_dict['player1'], filter_dict['player2'], filter_dict['player3']]:
+                if player and row[4] != player and row[5] != player and row[6] != player:
                     row_found = False
                     break
+            if filter_dict['year'] and filter_dict['year'] != datetime.strptime(row[0], '%Y-%m-%d').year:
+                row_found = False
+            if not filter_dict['1on1'] and row[1] is None:
+                row_found = False
             if row_found:
                 index += 1
                 result.append({"index": index, "date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})

@@ -1,0 +1,83 @@
+{% extends "card_base.html" %}
+
+{% block card_body %}
+<form action="/filter_action" method="POST">
+    <div class="form-group row">
+        <label for="year" class="col-sm-2 col-form-label">Year</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="year" name="year">
+                {% for k, v in [(0, 'All'), (2024, 2024), (2025, 2025)] %}
+                    {% if k == filter['year'] %}
+                        <option selected="selected" value="{{ k }}">{{ v }}</option>
+                    {% else %}
+                        <option value="{{ k }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="player1" class="col-sm-2 col-form-label">Player 1</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="player1" name="player1">
+                {% for k, v in players.items() %}
+                    {% if k == filter['player1'] %}
+                <option selected="selected" value="{{ k }}">{{ v }}</option>
+                    {% else %}
+                <option value="{{ k }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="player2" class="col-sm-2 col-form-label">Player 2</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="player2" name="player2">
+                {% for k, v in players.items() %}
+                    {% if k == filter['player2'] %}
+                <option selected="selected" value="{{ k }}">{{ v }}</option>
+                    {% else %}
+                <option value="{{ k }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="player3" class="col-sm-2 col-form-label">Player 3</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="player3" name="player3">
+                {% for k, v in players.items() %}
+                    {% if k == filter['player3'] %}
+                <option selected="selected" value="{{ k }}">{{ v }}</option>
+                    {% else %}
+                <option value="{{ k }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="1on1" name="1on1" {{ "checked" if filter['1on1'] == true }}>
+        <label class="form-check-label" for="1on1">Show 1on1 matches</label>
+    </div>
+    <br>
+    {% if error %}
+        {% block error %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+            <br>
+        {% endblock error %}
+    {% endif %}
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="{{filter['source']}}" class="btn btn-secondary me-md-2">Cancel</a>
+        <a href="/filter_clear" class="btn btn-primary me-md-2">Clear Filter</a>
+        <button id="submit" class="btn btn-primary" type="submit" onclick="swapButton()">Apply Filter</button>
+        <button id="spinner" class="btn btn-primary" type="button" disabled style="display: none">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Add Filter
+        </button>
+    </div>
+</form>
+{% endblock %}

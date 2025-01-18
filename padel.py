@@ -27,6 +27,7 @@ status_cache = {}
 events_cache = {}
 cache = Cache()
 database = Database(config)
+filter_dict = {'year': 0, 'player1': None, 'player2': None, 'player3': None, '1on1': True}
 
 
 @login_manager.user_loader
@@ -252,6 +253,39 @@ def delete_action():
     return redirect(f"/calendar/{request.form['booking_date']}")
 
 
+@app.route('/filter_action', methods=['POST'])
+@login_required
+def filter_action():
+    error = ''
+    filter_dict['year'] = None if request.form['year'] == '0' else int(request.form['year'])
+    filter_dict['player1'] = None if request.form['player1'] == '0' else int(request.form['player1'])
+    filter_dict['player2'] = None if request.form['player2'] == '0' else int(request.form['player2'])
+    filter_dict['player3'] = None if request.form['player3'] == '0' else int(request.form['player3'])
+    filter_dict['1on1'] = '1on1' in request.form and request.form['1on1'] == 'true'
+    if error:
+        return render_template("filter_form.html", filter=filter_dict, result=request.form['result'],
+                               players=database.get_players(), error=error)
+    return redirect(filter_dict['source'])
+
+
+@app.route('/filter_clear', methods=['GET'])
+@login_required
+def filter_clear():
+    filter_dict['year'] = 0
+    filter_dict['player1'] = None
+    filter_dict['player2'] = None
+    filter_dict['player3'] = None
+    filter_dict['1on1'] = True
+    return redirect(filter_dict['source'])
+
+
+@app.route('/filter_form', methods=['GET'])
+@login_required
+def filter_form():
+    filter_dict['source'] = request.args.get('src', type=str)
+    return render_template("filter_form.html", filter=filter_dict, players=database.get_players())
+
+
 @app.route('/match_action', methods=['POST'])
 @login_required
 def match_action():
@@ -299,10 +333,7 @@ def matches():
 @app.route('/matches.json', methods=['GET'])
 @login_required
 def matches_json():
-    player1 = request.args.get('player1', type=int)
-    player2 = request.args.get('player2', type=int)
-    player3 = request.args.get('player3', type=int)
-    return database.get_matches(player1, player2, player3)
+    return database.get_matches(filter_dict)
 
 
 @app.route('/partner_list.json', methods=['GET'])
