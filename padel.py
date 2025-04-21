@@ -27,7 +27,8 @@ status_cache = {}
 events_cache = {}
 cache = Cache()
 database = Database(config)
-filter_dict = {'year': 0, 'player1': None, 'player2': None, 'player3': None, '1on1': True}
+filter_dict = {'year': 0, 'player1': None, 'player2': None, 'player3': None, 'show1on1': True,
+               'show2on2': True, 'showWin': True, 'showDraw': True, 'showLoss': True}
 
 
 @login_manager.user_loader
@@ -261,7 +262,11 @@ def filter_action():
     filter_dict['player1'] = None if request.form['player1'] == '0' else int(request.form['player1'])
     filter_dict['player2'] = None if request.form['player2'] == '0' else int(request.form['player2'])
     filter_dict['player3'] = None if request.form['player3'] == '0' else int(request.form['player3'])
-    filter_dict['1on1'] = '1on1' in request.form and request.form['1on1'] == 'true'
+    filter_dict['show1on1'] = 'show1on1' in request.form and request.form['show1on1'] == 'true'
+    filter_dict['show2on2'] = 'show2on2' in request.form and request.form['show2on2'] == 'true'
+    filter_dict['showWin'] = 'showWin' in request.form and request.form['showWin'] == 'true'
+    filter_dict['showDraw'] = 'showDraw' in request.form and request.form['showDraw'] == 'true'
+    filter_dict['showLoss'] = 'showLoss' in request.form and request.form['showLoss'] == 'true'
     if error:
         return render_template("filter_form.html", filter=filter_dict, result=request.form['result'],
                                players=database.get_players(), error=error)
@@ -275,7 +280,11 @@ def filter_clear():
     filter_dict['player1'] = None
     filter_dict['player2'] = None
     filter_dict['player3'] = None
-    filter_dict['1on1'] = True
+    filter_dict['show1on1'] = True
+    filter_dict['show2on2'] = True
+    filter_dict['showWin'] = True
+    filter_dict['showDraw'] = True
+    filter_dict['showLoss'] = True
     return redirect(filter_dict['source'])
 
 

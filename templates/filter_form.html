@@ -64,8 +64,28 @@
     <br>
     <div class="form-check">
         <input class="form-check-input" type="checkbox" value="true"
-               id="1on1" name="1on1" {{ "checked" if filter['1on1'] == true }}>
-        <label class="form-check-label" for="1on1">Show 1on1 matches</label>
+               id="show1on1" name="show1on1" {{ "checked" if filter['show1on1'] == true }}/>
+        <label class="form-check-label" for="show1on1">Show 1on1s</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="show2on2" name="show2on2" {{ "checked" if filter['show2on2'] == true }}/>
+        <label class="form-check-label" for="show2on2">Show 2on2s</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="showWin" name="showWin" {{ "checked" if filter['showWin'] == true }}/>
+        <label class="form-check-label" for="showWin">Show wins</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="showDraw" name="showDraw" {{ "checked" if filter['showDraw'] == true }}/>
+        <label class="form-check-label" for="showDraw">Show draws</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="true"
+               id="showLoss" name="showLoss" {{ "checked" if filter['showLoss'] == true }}/>
+        <label class="form-check-label" for="showLoss">Show losses</label>
     </div>
     <br>
     {% if error %}

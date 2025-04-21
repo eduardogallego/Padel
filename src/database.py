@@ -42,7 +42,15 @@ class Database:
                     break
             if filter_dict['year'] and filter_dict['year'] != datetime.strptime(row[0], '%Y-%m-%d').year:
                 row_found = False
-            if not filter_dict['1on1'] and row[1] is None:
+            if not filter_dict['show1on1'] and row[1] is None:
+                row_found = False
+            if not filter_dict['show2on2'] and row[1] is not None:
+                row_found = False
+            if not filter_dict['showWin'] and row[3] == 1:
+                row_found = False
+            if not filter_dict['showDraw'] and row[3] is None:
+                row_found = False
+            if not filter_dict['showLoss'] and row[3] == 0:
                 row_found = False
             if row_found:
                 index += 1
@@ -100,7 +108,15 @@ class Database:
                     break
             if filter_dict['year'] and filter_dict['year'] != datetime.strptime(date, '%Y-%m-%d').year:
                 row_found = False
-            if not filter_dict['1on1'] and not partner:
+            if not filter_dict['show1on1'] and not partner:
+                row_found = False
+            if not filter_dict['show2on2'] and partner:
+                row_found = False
+            if not filter_dict['showWin'] and result == 1:
+                row_found = False
+            if not filter_dict['showDraw'] and result is None:
+                row_found = False
+            if not filter_dict['showLoss'] and result == 0:
                 row_found = False
             if not row_found:
                 continue
