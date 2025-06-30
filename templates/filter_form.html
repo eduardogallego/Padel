@@ -62,6 +62,21 @@
         </div>
     </div>
     <br>
+    <div class="form-group row">
+        <label for="minMatches" class="col-sm-2 col-form-label">Min Matches</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="minMatches" name="minMatches">
+                {% for v in [1, 2, 5, 10, 20, 30, 50, 75, 100] %}
+                    {% if v == filter['minMatches'] %}
+                        <option selected="selected" value="{{ v }}">{{ v }}</option>
+                    {% else %}
+                        <option value="{{ v }}">{{ v }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <br>
     <div class="form-check">
         <input class="form-check-input" type="checkbox" value="true"
                id="show1on1" name="show1on1" {{ "checked" if filter['show1on1'] == true }}/>

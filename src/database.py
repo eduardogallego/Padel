@@ -92,7 +92,7 @@ class Database:
         players = {}
         for row in rows:
             players[int(row[0])] = {"player": row[1], "total": 0, "pt": 0, "pw": 0, "pd": 0, "pl": 0,
-                                    "rt": 0, "rw": 0, "rd": 0, "rl": 0, "tw": 0, "td": 0, "tl": 0, }
+                                    "rt": 0, "rw": 0, "rd": 0, "rl": 0, "tw": 0, "td": 0, "tl": 0}
         cursor.execute('SELECT partner, rival1, rival2, result, match_date FROM matches')
         rows = cursor.fetchall()
         for row in rows:
@@ -152,13 +152,32 @@ class Database:
         players = [p for p in players if p['total'] > 0]
         result = []
         index = 0
+        others = {"player": "Others", "total": 0, "pt": 0, "pw": 0, "pd": 0, "pl": 0,
+                  "rt": 0, "rw": 0, "rd": 0, "rl": 0, "tw": 0, "td": 0, "tl": 0, }
         for player in players:
-            index += 1
-            result.append({'index': index, 'player': player['player'], 'total': player['total'],
-                           'pw': player['pw'], 'pd': player['pd'], 'pl': player['pl'],
-                           'rw': player['rw'], 'rd': player['rd'], 'rl': player['rl'],
-                           'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
-                           'rt': player['rt'], 'rs': f"{player['rw']}/{player['rd']}/{player['rl']}"})
+            if player['total'] >= filter_dict['minMatches']:
+                index += 1
+                result.append({'index': index, 'player': player['player'], 'total': player['total'],
+                               'pw': player['pw'], 'pd': player['pd'], 'pl': player['pl'],
+                               'rw': player['rw'], 'rd': player['rd'], 'rl': player['rl'],
+                               'pt': player['pt'], 'ps': f"{player['pw']}/{player['pd']}/{player['pl']}",
+                               'rt': player['rt'], 'rs': f"{player['rw']}/{player['rd']}/{player['rl']}"})
+            else:
+                others['total'] += player['total']
+                others['pw'] += player['pw']
+                others['pd'] += player['pd']
+                others['pl'] += player['pl']
+                others['rw'] += player['rw']
+                others['rd'] += player['rd']
+                others['rl'] += player['rl']
+                others['pt'] += player['pt']
+                others['rt'] += player['rt']
+        if others['total'] > 0:
+            result.append({'index': index + 1, 'player': others['player'], 'total': others['total'],
+                           'pw': others['pw'], 'pd': others['pd'], 'pl': others['pl'],
+                           'rw': others['rw'], 'rd': others['rd'], 'rl': others['rl'],
+                           'pt': others['pt'], 'ps': f"{others['pw']}/{others['pd']}/{others['pl']}",
+                           'rt': others['rt'], 'rs': f"{others['rw']}/{others['rd']}/{others['rl']}"})
         return json.dumps(result)
 
     def insert_player(self, player):
