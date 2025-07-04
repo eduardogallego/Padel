@@ -57,28 +57,31 @@ class Database:
                 result.append({"index": index, "date": row[0], "partner": row[1], "rivals": row[2], "result": row[3]})
         return json.dumps(result)
 
-    def get_players(self):
+    def get_players(self, filter_dict):
         cursor = self.connection.cursor()
-        cursor.execute('SELECT id, name FROM players ORDER BY name')
+        cursor.execute('SELECT id, name, '
+                       '(SELECT COUNT(*) FROM matches WHERE partner = p.id OR rival1 = p.id OR rival2 = p.id) AS times '
+                       'FROM players AS p WHERE times >= %d ORDER BY name' % filter_dict['minMatches'])
         rows = cursor.fetchall()
         result = {0: 'none'}
         for row in rows:
             result[row[0]] = row[1]
         return result
 
-    def get_partner_list_json(self):
+    def get_partner_list_json(self, filter_dict):
         cursor = self.connection.cursor()
-        cursor.execute('SELECT DISTINCT p.name FROM players p INNER JOIN matches m ON p.id = m.partner ORDER BY name')
+        cursor.execute('SELECT name, (SELECT COUNT(*) FROM matches WHERE partner = p.id) AS times '
+                       'FROM players AS p WHERE times >= %d ORDER BY name' % filter_dict['minMatches'])
         rows = cursor.fetchall()
         players = {}
         for row in rows:
             players[row[0]] = row[0]
         return json.dumps(players)
 
-    def get_rival_list_json(self):
+    def get_rival_list_json(self, filter_dict):
         cursor = self.connection.cursor()
-        cursor.execute('SELECT name FROM players WHERE id IN '
-                       '(SELECT rival1 FROM matches UNION SELECT rival2 FROM matches) ORDER BY name')
+        cursor.execute('SELECT name, (SELECT COUNT(*) FROM matches WHERE rival1 = p.id OR rival2 = p.id) AS times '
+                       'FROM players AS p WHERE times >= %d ORDER BY name' % filter_dict['minMatches'])
         rows = cursor.fetchall()
         players = {}
         for row in rows:

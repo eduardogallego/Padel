@@ -270,7 +270,7 @@ def filter_action():
     filter_dict['showLoss'] = 'showLoss' in request.form and request.form['showLoss'] == 'true'
     if error:
         return render_template("filter_form.html", filter=filter_dict, result=request.form['result'],
-                               players=database.get_players(), error=error)
+                               players=database.get_players(filter_dict), error=error)
     return redirect(filter_dict['source'])
 
 
@@ -294,7 +294,7 @@ def filter_clear():
 @login_required
 def filter_form():
     filter_dict['source'] = request.args.get('src', type=str)
-    return render_template("filter_form.html", filter=filter_dict, players=database.get_players())
+    return render_template("filter_form.html", filter=filter_dict, players=database.get_players(filter_dict))
 
 
 @app.route('/match_action', methods=['POST'])
@@ -320,15 +320,15 @@ def match_action():
         error = 'Wrong match parameters'
     if error:
         return render_template("match_form.html", date=match_date, partner=partner, rival1=rival_a, rival2=rival_b,
-                               result=request.form['result'], players=database.get_players(), error=error)
+                               result=request.form['result'], players=database.get_players(filter_dict), error=error)
     return redirect("/matches")
 
 
 @app.route('/match_form', methods=['GET'])
 @login_required
 def match_form():
-    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'), partner=0,
-                           rival1=0, rival2=0, result="1", players=database.get_players())
+    return render_template("match_form.html", date=date.today().strftime('%Y-%m-%d'), partner=0, rival1=0,
+                           rival2=0, result="1", players=database.get_players(filter_dict))
 
 
 @app.route('/matches', methods=['GET', 'POST'])
@@ -337,8 +337,8 @@ def matches():
     player1 = None if not request.form or request.form['player1'] == '0' else int(request.form['player1'])
     player2 = None if not request.form or request.form['player2'] == '0' else int(request.form['player2'])
     player3 = None if not request.form or request.form['player3'] == '0' else int(request.form['player3'])
-    return render_template("matches.html", player1=player1, player2=player2,
-                           player3=player3, players=database.get_players())
+    return render_template("matches.html", player1=player1, player2=player2, player3=player3,
+                           players=database.get_players(filter_dict))
 
 
 @app.route('/matches.json', methods=['GET'])
@@ -350,7 +350,7 @@ def matches_json():
 @app.route('/partner_list.json', methods=['GET'])
 @login_required
 def partner_list_json():
-    return database.get_partner_list_json()
+    return database.get_partner_list_json(filter_dict)
 
 
 @app.route('/player_action', methods=['POST'])
@@ -388,7 +388,7 @@ def players_json():
 @app.route('/rival_list.json', methods=['GET'])
 @login_required
 def rival_list_json():
-    return database.get_rival_list_json()
+    return database.get_rival_list_json(filter_dict)
 
 
 @app.route('/favicon.ico', methods=['GET'])
