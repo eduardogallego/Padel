@@ -6,10 +6,9 @@
     <div class="p-2 mx-auto"><canvas id="chartYearId" aria-label="chart" height="230" width="250"></canvas></div>
     <div class="p-2 mx-auto"><canvas id="chartId" aria-label="chart" height="230" width="250"></canvas></div>
 </div>
-<table class="table-borderless" data-filter-control="true" data-page-list="[10, 25, 50, 100, All]"
-       data-page-size="25" data-pagination="true" data-pagination-next-text="Next"
-       data-pagination-pre-text="Previous" data-search="true" data-show-footer="true" data-toggle="table"
-       data-url="matches.json?player1={{ player1 }}&player2={{ player2 }}&player3={{ player3 }}">
+<table class="table-borderless" data-filter-control="true" data-page-list="[10, 25, 50, 100, All]" data-page-size="25"
+       data-pagination="true" data-pagination-successively-size="8" data-search="true" data-show-footer="true"
+       data-toggle="table" data-url="matches.json?player1={{ player1 }}&player2={{ player2 }}&player3={{ player3 }}">
     <thead>
         <tr>
             <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index"
