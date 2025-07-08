@@ -1,23 +1,25 @@
 {% extends "stats_base.html" %}
 
 {% block body %}
-<div class="d-flex justify-content-between flex-wrap">
-    <div class="p-2"><canvas id="chart10Id" aria-label="chart" height="300" width="340"></canvas></div>
-    <div class="p-2"><canvas id="chartId" aria-label="chart" height="300" width="340"></canvas></div>
+<div class="d-flex justify-content-center flex-wrap">
+    <div class="p-2 mx-auto"><canvas id="chart10Id" aria-label="chart" height="200" width="250"></canvas></div>
+    <div class="p-2 mx-auto"><canvas id="chartYearId" aria-label="chart" height="200" width="250"></canvas></div>
+    <div class="p-2 mx-auto"><canvas id="chartId" aria-label="chart" height="200" width="250"></canvas></div>
 </div>
 <table class="table-borderless" data-filter-control="true" data-search="true" data-show-footer="true"
        data-toggle="table" data-url="matches.json?player1={{ player1 }}&player2={{ player2 }}&player3={{ player3 }}">
     <thead>
         <tr>
-            <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index" data-sortable="true">#</th>
+            <th class="index" data-cell-style="cellStyleIndexMatchResult" data-field="index"
+              data-footer-formatter="footItemCountFormatter" data-sortable="true">#</th>
             <th data-cell-style="cellStyleMatchResult" data-field="date" data-filter-control="input"
-              data-footer-formatter="footItemCountFormatter" data-formatter="formatterDate" data-sortable="true">D</th>
+              data-footer-formatter="foot10Results" data-formatter="formatterDate" data-sortable="true">D</th>
             <th data-cell-style="cellStyleMatchResult" data-field="partner" data-filter-control="select"
               data-filter-data="url:/partner_list.json" data-filter-strict-search="false"
-              data-footer-formatter="footResults" data-sortable="true">Partner</th>
+              data-footer-formatter="footYearResults" data-sortable="true">Partner</th>
             <th data-cell-style="cellStyleMatchResult" data-field="rivals" data-filter-control="select"
               data-filter-data="url:/rival_list.json" data-filter-strict-search="false"
-              data-footer-formatter="foot10Results" data-sortable="true">Rivals</th>
+              data-footer-formatter="footResults" data-sortable="true">Rivals</th>
         </tr>
     </thead>
 </table>

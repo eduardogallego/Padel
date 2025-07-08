@@ -1,7 +1,9 @@
 var chartId;
 var chart10Id;
+var chartYearId;
 var lastResult;
 var last10Result;
+var lastYearResult;
 
 function cellStylePartnerResult(value, row, index) {
     var result = '';
@@ -181,6 +183,59 @@ function foot10Results(data) {
             }
         });
         last10Result = result;
+    }
+    return result;
+}
+
+function footYearResults(data) {
+    var win = 0;
+    var loss = 0
+    var draw = 0;
+    var counter = 0;
+    var currentYear = (new Date()).getUTCFullYear();
+    data.forEach(function(data) {
+        var matchYear = (new Date(data.date)).getUTCFullYear();
+        if (matchYear === currentYear) {
+            if (data.result == null) {
+                draw += 1;
+            } else if (data.result == 1) {
+                win += 1;
+            } else {
+                loss += 1;
+            }
+        }
+        counter += 1;
+    });
+    result = win + " / " + draw + " / " + loss;
+    if (lastYearResult !== result) {
+        var chart = document.getElementById("chartYearId").getContext("2d");
+        var total = win + draw + loss;
+        if (chartYearId) {
+            chartYearId.destroy()
+        }
+        chartYearId = new Chart(chart, {
+            type: 'pie',
+            data: {
+                labels: ["win", "draw", "loss"],
+                datasets: [{
+                    data: [(win * 100 / total).toFixed(1), (draw * 100 / total).toFixed(1),
+                    (loss * 100 / total).toFixed(1)],
+                    backgroundColor: ['MediumSeaGreen', 'Orange', 'Tomato'],
+                    hoverOffset: 5
+                }],
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "bottom",
+                        align: "center"
+                    }
+                }
+            }
+        });
+        lastYearResult = result;
     }
     return result;
 }
