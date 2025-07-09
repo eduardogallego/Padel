@@ -182,7 +182,7 @@ function foot25Results(data) {
                 }
             }
         });
-        last10Result = result;
+        last25Result = result;
     }
     return result;
 }
