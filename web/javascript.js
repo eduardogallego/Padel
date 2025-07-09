@@ -1,8 +1,8 @@
 var chartId;
-var chart10Id;
+var chart25Id;
 var chartYearId;
 var lastResult;
-var last10Result;
+var last25Result;
 var lastYearResult;
 
 function cellStylePartnerResult(value, row, index) {
@@ -136,13 +136,13 @@ function footResults(data) {
     return result;
 }
 
-function foot10Results(data) {
+function foot25Results(data) {
     var win = 0;
     var loss = 0
     var draw = 0;
     var counter = 0;
     data.forEach(function(data) {
-        if (counter < 10) {
+        if (counter < 25) {
             if (data.result == null) {
                 draw += 1;
             } else if (data.result == 1) {
@@ -154,13 +154,13 @@ function foot10Results(data) {
         counter += 1;
     });
     result = win + " / " + draw + " / " + loss;
-    if (last10Result !== result) {
-        var chart = document.getElementById("chart10Id").getContext("2d");
+    if (last25Result !== result) {
+        var chart = document.getElementById("chart25Id").getContext("2d");
         var total = win + draw + loss;
-        if (chart10Id) {
-            chart10Id.destroy()
+        if (chart25Id) {
+            chart25Id.destroy()
         }
-        chart10Id = new Chart(chart, {
+        chart25Id = new Chart(chart, {
             type: 'pie',
             data: {
                 labels: ["win", "draw", "loss"],
