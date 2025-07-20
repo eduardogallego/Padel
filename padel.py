@@ -27,8 +27,8 @@ status_cache = {}
 events_cache = {}
 cache = Cache()
 database = Database(config)
-filter_dict = {'year': 0, 'player1': None, 'player2': None, 'player3': None, 'minMatches': 2,
-               'show1on1': True, 'show2on2': True, 'showWin': True, 'showDraw': True, 'showLoss': True}
+filter_dict = {'minMatches': 3, 'player1': None, 'player2': None, 'player3': None, 'showDraw': True,
+               'showLoss': True, 'showWin': True, 'show1on1': True, 'show2on2': True, 'year': 0}
 
 
 @login_manager.user_loader
