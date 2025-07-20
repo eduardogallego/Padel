@@ -66,7 +66,7 @@
         <label for="minMatches" class="col-3 col-form-label">Matches</label>
         <div class="col-9">
             <select class="form-control" id="minMatches" name="minMatches">
-                {% for v in [1, 2, 3, 5, 10, 20, 30, 50, 75, 100] %}
+                {% for v in [0, 1, 2, 3, 5, 10, 20, 30, 50, 75, 100] %}
                     {% if v == filter['minMatches'] %}
                         <option selected="selected" value="{{ v }}">{{ v }}</option>
                     {% else %}
