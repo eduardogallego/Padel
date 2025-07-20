@@ -281,7 +281,7 @@ def filter_clear():
     filter_dict['player1'] = None
     filter_dict['player2'] = None
     filter_dict['player3'] = None
-    filter_dict['minMatches'] = 2
+    filter_dict['minMatches'] = 3
     filter_dict['show1on1'] = True
     filter_dict['show2on2'] = True
     filter_dict['showWin'] = True
