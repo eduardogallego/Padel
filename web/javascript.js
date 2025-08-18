@@ -102,7 +102,7 @@ function footResults(data) {
             loss += 1;
         }
     });
-    result = win + " / " + draw + " / " + loss;
+    result = win + "/" + draw + "/" + loss;
     if (lastResult !== result) {
         var chart = document.getElementById("chartId").getContext("2d");
         var total = win + draw + loss;
@@ -153,7 +153,7 @@ function foot25Results(data) {
         }
         counter += 1;
     });
-    result = win + " / " + draw + " / " + loss;
+    result = win + "/" + draw + "/" + loss;
     if (last25Result !== result) {
         var chart = document.getElementById("chart25Id").getContext("2d");
         var total = win + draw + loss;
@@ -206,7 +206,7 @@ function footYearResults(data) {
         }
         counter += 1;
     });
-    result = win + " / " + draw + " / " + loss;
+    result = win + "/" + draw + "/" + loss;
     if (lastYearResult !== result) {
         var chart = document.getElementById("chartYearId").getContext("2d");
         var total = win + draw + loss;
