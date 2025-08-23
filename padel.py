@@ -27,8 +27,7 @@ status_cache = {}
 events_cache = {}
 cache = Cache()
 database = Database(config)
-filter_dict = {'minMatches': 3, 'player1': None, 'player2': None, 'player3': None, 'showDraw': True,
-               'showLoss': True, 'showWin': True, 'show1on1': True, 'show2on2': True, 'year': 0}
+filter_dict = Config.get_default_filter()
 
 
 @login_manager.user_loader
@@ -277,16 +276,9 @@ def filter_action():
 @app.route('/filter_clear', methods=['GET'])
 @login_required
 def filter_clear():
-    filter_dict['year'] = 0
-    filter_dict['player1'] = None
-    filter_dict['player2'] = None
-    filter_dict['player3'] = None
-    filter_dict['minMatches'] = 3
-    filter_dict['show1on1'] = True
-    filter_dict['show2on2'] = True
-    filter_dict['showWin'] = True
-    filter_dict['showDraw'] = True
-    filter_dict['showLoss'] = True
+    default_filter = Config.get_default_filter()
+    for key in default_filter:
+        filter_dict[key] = default_filter[key]
     return redirect(filter_dict['source'])
 
 
@@ -338,7 +330,7 @@ def matches():
     player2 = None if not request.form or request.form['player2'] == '0' else int(request.form['player2'])
     player3 = None if not request.form or request.form['player3'] == '0' else int(request.form['player3'])
     return render_template("matches.html", player1=player1, player2=player2, player3=player3,
-                           players=database.get_players(filter_dict))
+                           players=database.get_players(filter_dict), messages=database.get_statistics())
 
 
 @app.route('/matches.json', methods=['GET'])
@@ -357,11 +349,15 @@ def partner_list_json():
 @login_required
 def player_action():
     player = request.form['player'].strip()
+    long_name = request.form['long_name'].strip()
     error = ''
     if len(player) == 0:
         error = "Player cannot be empty"
-    elif database.insert_player(player) != 1:
-        error = f"Wrong player name '{player}'"
+    else:
+        if len(long_name) == 0:
+            long_name = player
+        if database.insert_player(player, long_name) != 1:
+            error = f"Wrong player name {long_name} ({player})"
     if error:
         return render_template("player_form.html", error=error)
     return redirect("/players")

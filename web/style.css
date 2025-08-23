@@ -60,6 +60,11 @@ html {
     padding: 0.3rem 0.1rem !important;
 }
 
+ul {
+    margin-bottom: 0;
+    padding-left: 1rem !important;
+}
+
 .draw {
     background-color: Orange !important;
     color: white !important;

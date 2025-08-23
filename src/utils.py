@@ -13,6 +13,11 @@ class Config:
     def get(self, parameter):
         return self._config.get(parameter)
 
+    @staticmethod
+    def get_default_filter():
+        return {'minMatches': 3, 'player1': None, 'player2': None, 'player3': None, 'showDraw': True,
+                'showLoss': True, 'showWin': True, 'show1on1': True, 'show2on2': True, 'year': 0}
+
 
 class Logger:
     def __init__(self):
