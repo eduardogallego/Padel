@@ -347,22 +347,39 @@ class Database:
             f"{(datetime.now() - previous_loss).days} days without loosing a match ({not_loosing_days_year} at "
             f"{not_loosing_date_year.strftime('%y-%m-%d')} this year, {not_loosing_days_total} at "
             f"{not_loosing_date_total.strftime('%y-%m-%d')} in total)",
-            f"{wins_in_a_row} consecutive matches won ({max_wins_in_a_row_year} at "
-            f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_wins_in_a_row_total} at "
-            f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
-            f"{not_loss_in_a_row} consecutive matches not loosing ({max_not_loss_in_a_row_year} at "
-            f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_not_loss_in_a_row_total} at "
-            f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
             f"{(datetime.now() - previous_win).days} days without winning a match ({not_winning_days_year} at "
             f"{not_winning_date_year.strftime('%y-%m-%d')} this year, {not_winning_days_total} at "
             f"{not_winning_date_total.strftime('%y-%m-%d')} in total)",
-            f"{loss_in_a_row} consecutive matches lost ({max_loss_in_a_row_year} at "
-            f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_loss_in_a_row_total} at "
-            f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
-            f"{not_wins_in_a_row} consecutive matches not winning ({max_not_wins_in_a_row_year} at "
-            f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_not_wins_in_a_row_total} at "
-            f"{max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
         ])
+        messages.append(f"{wins_in_a_row} consecutive matches won ({max_wins_in_a_row_year} at "
+                        f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_wins_in_a_row_total} at "
+                        f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
+                        if 0 < wins_in_a_row <= max_wins_in_a_row_year else
+                        f"{max_wins_in_a_row_year} consecutive matches won this year at "
+                        f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')}, {max_wins_in_a_row_total} at "
+                        f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)")
+        messages.append(f"{not_loss_in_a_row} consecutive matches not loosing ({max_not_loss_in_a_row_year} at "
+                        f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, "
+                        f"{max_not_loss_in_a_row_total} at "
+                        f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
+                        if 0 < not_loss_in_a_row <= max_not_loss_in_a_row_year else
+                        f"{max_not_loss_in_a_row_year} consecutive matches not loosing this year at "
+                        f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')}, {max_not_loss_in_a_row_total} at "
+                        f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total")
+        messages.append(f"{loss_in_a_row} consecutive matches lost ({max_loss_in_a_row_year} at "
+                        f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_loss_in_a_row_total} at "
+                        f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
+                        if 0 < loss_in_a_row <= max_loss_in_a_row_total else
+                        f"{max_loss_in_a_row_year} consecutive matches lost this year at "
+                        f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}, {max_loss_in_a_row_total} at "
+                        f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total")
+        messages.append(f"{not_wins_in_a_row} consecutive matches not winning ({max_not_wins_in_a_row_year} at "
+                        f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_not_wins_in_a_row_total} at "
+                        f"{max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
+                        if 0 < not_wins_in_a_row <= max_not_wins_in_a_row_year else
+                        f"{max_not_wins_in_a_row_year} consecutive matches not winning this year at "
+                        f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}, {max_not_wins_in_a_row_total} at "
+                        f"{max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total")
 
         wins_perc_year = wins_year * 100 / matches_year
         next_rnd_year = (int(wins_perc_year / 5) + 1) * 5
