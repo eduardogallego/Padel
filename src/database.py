@@ -342,17 +342,19 @@ class Database:
             f"{not_loosing_date_total.strftime('%y-%m-%d')} in total)",
             f"{wins_in_a_row} consecutive matches won ({max_wins_in_a_row_year} at "
             f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_wins_in_a_row_total} at "
-            f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total), {not_loss_in_a_row} not loosing ("
-            f"{max_not_loss_in_a_row_year} at {max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, "
-            f"{max_not_loss_in_a_row_total} at {max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
+            f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
+            f"{not_loss_in_a_row} consecutive matches not loosing ({max_not_loss_in_a_row_year} at "
+            f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_not_loss_in_a_row_total} at "
+            f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
             f"{(datetime.now() - previous_win).days} days without winning a match ({not_winning_days_year} at "
             f"{not_winning_date_year.strftime('%y-%m-%d')} this year, {not_winning_days_total} at "
             f"{not_winning_date_total.strftime('%y-%m-%d')} in total)",
             f"{loss_in_a_row} consecutive matches lost ({max_loss_in_a_row_year} at "
             f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_loss_in_a_row_total} at "
-            f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total), {not_wins_in_a_row} not winning ("
-            f"{max_not_wins_in_a_row_year} at {max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, "
-            f"{max_not_wins_in_a_row_total} at {max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
+            f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total)",
+            f"{not_wins_in_a_row} consecutive matches not winning ({max_not_wins_in_a_row_year} at "
+            f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')} this year, {max_not_wins_in_a_row_total} at "
+            f"{max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total)"
         ])
 
         wins_perc_year = wins_year * 100 / matches_year
