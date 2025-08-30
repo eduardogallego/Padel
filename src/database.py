@@ -333,8 +333,15 @@ class Database:
                     wins_in_a_row = 0
                     loss_in_a_row = 0
             previous_date = date
+        not_playing_days_current = (datetime.now() - date).days
+        if not_playing_days_current >= not_playing_days_year:
+            not_playing_days_year = not_playing_days_current
+            not_playing_date_year = datetime.now()
+            if not_playing_days_current >= not_playing_days_total:
+                not_playing_days_total = not_playing_days_current
+                not_playing_date_total = datetime.now()
         messages.extend([
-            f"{(datetime.now() - date).days} days without Padel ({not_playing_days_year} at "
+            f"{not_playing_days_current} days without Padel ({not_playing_days_year} at "
             f"{not_playing_date_year.strftime('%y-%m-%d')} this year, {not_playing_days_total} at "
             f"{not_playing_date_total.strftime('%y-%m-%d')} in total)",
             f"{(datetime.now() - previous_loss).days} days without loosing a match ({not_loosing_days_year} at "
