@@ -336,59 +336,65 @@ class Database:
         not_playing_days_current = (datetime.now() - date).days
         not_loosing_days_current = (datetime.now() - previous_loss).days
         not_winning_days_current = (datetime.now() - previous_win).days
-        if not_playing_days_current >= not_playing_days_year:
-            not_playing_days_year = not_playing_days_current
-            not_playing_date_year = datetime.now()
-            if not_playing_days_current >= not_playing_days_total:
-                not_playing_days_total = not_playing_days_current
-                not_playing_date_total = datetime.now()
         not_playing_days_msg = f"{not_playing_days_current} days without Padel"
         if not_playing_days_year > not_playing_days_current:
             not_playing_days_msg += f", {not_playing_days_year} at {not_playing_date_year.strftime('%y-%m-%d')}"
         if not_playing_days_total > not_playing_days_year:
             not_playing_days_msg += f" this year, {not_playing_days_total} at " \
                                         f"{not_playing_date_total.strftime('%y-%m-%d')} in total"
-        not_loosing_days_msg = f"{not_loosing_days_current} days without loosing a match, {not_loosing_days_year} at " \
-                               f"{not_loosing_date_year.strftime('%y-%m-%d')}" if 0 < not_loosing_days_current else \
-            f"{not_loosing_days_year} days without loosing a match at {not_loosing_date_year.strftime('%y-%m-%d')}"
+        not_loosing_days_msg = f"{not_loosing_days_current} days without loosing a match"
+        if not_loosing_days_year > not_loosing_days_current:
+            not_loosing_days_msg += f", {not_loosing_days_year} at {not_loosing_date_year.strftime('%y-%m-%d')}"
         if not_loosing_days_total > not_loosing_days_year:
             not_loosing_days_msg += f" this year, {not_loosing_days_total} at " \
                                     f"{not_loosing_date_total.strftime('%y-%m-%d')} in total"
-        not_winning_days_msg = f"{not_winning_days_current} days without winning a match, {not_winning_days_year} at " \
-                               f"{not_winning_date_year.strftime('%y-%m-%d')}" if 0 < not_winning_days_current else \
-            f"{not_winning_days_year} days without winning a match at {not_winning_date_year.strftime('%y-%m-%d')}"
+        not_winning_days_msg = f"{not_winning_days_current} days without winning a match"
+        if not_winning_days_year > not_winning_days_current:
+            not_winning_days_msg += f", {not_winning_days_year} at {not_winning_date_year.strftime('%y-%m-%d')}"
         if not_winning_days_total > not_winning_days_year:
             not_winning_days_msg += f" this year, {not_winning_days_total} at " \
                                     f"{not_winning_date_total.strftime('%y-%m-%d')} in total"
-        max_wins_in_a_row_msg = f"{wins_in_a_row} consecutive matches won, {max_wins_in_a_row_year} at " \
-                                f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')}" \
-            if 0 < wins_in_a_row <= max_wins_in_a_row_year else \
-            f"{max_wins_in_a_row_year} consecutive matches won at {max_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
+        if wins_in_a_row == 0:
+            max_wins_in_a_row_msg = f"{max_wins_in_a_row_year} consecutive matches won at " \
+                                    f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
+        else:
+            max_wins_in_a_row_msg = f"{wins_in_a_row} consecutive matches won"
+            if max_wins_in_a_row_year > wins_in_a_row:
+                max_wins_in_a_row_msg += f", {max_wins_in_a_row_year} at " \
+                                         f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
         if max_wins_in_a_row_total > max_wins_in_a_row_year:
             max_wins_in_a_row_msg += f" this year, {max_wins_in_a_row_total} at " \
                                      f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        max_not_loss_in_a_row_msg = f"{not_loss_in_a_row} consecutive matches not loosing, " \
-                                    f"{max_not_loss_in_a_row_year} at " \
-                                    f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} " \
-            if 0 < not_loss_in_a_row <= max_not_loss_in_a_row_year else \
-            f"{max_not_loss_in_a_row_year} consecutive matches not loosing at " \
-            f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
+        if not_loss_in_a_row == 0:
+            max_not_loss_in_a_row_msg = f"{max_not_loss_in_a_row_year} consecutive matches not loosing at " \
+                                        f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
+        else:
+            max_not_loss_in_a_row_msg = f"{not_loss_in_a_row} consecutive matches not loosing"
+            if max_not_loss_in_a_row_year > not_loss_in_a_row:
+                max_not_loss_in_a_row_msg += f", {max_not_loss_in_a_row_year} at " \
+                                             f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')} "
         if max_not_loss_in_a_row_total > max_not_loss_in_a_row_year:
             max_not_loss_in_a_row_msg += f" this year, {max_not_loss_in_a_row_total} at " \
                                          f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        max_loss_in_a_row_msg = f"{loss_in_a_row} consecutive matches lost, {max_loss_in_a_row_year} at " \
-                                f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}" \
-            if 0 < loss_in_a_row <= max_loss_in_a_row_total else \
-            f"{max_loss_in_a_row_year} consecutive matches lost at {max_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
+        if loss_in_a_row == 0:
+            max_loss_in_a_row_msg = f"{max_loss_in_a_row_year} consecutive matches lost at " \
+                                    f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
+        else:
+            max_loss_in_a_row_msg = f"{loss_in_a_row} consecutive matches lost"
+            if max_loss_in_a_row_year > loss_in_a_row:
+                max_loss_in_a_row_msg += f", {max_loss_in_a_row_year} at " \
+                                         f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
         if max_loss_in_a_row_total > max_not_loss_in_a_row_year:
             max_loss_in_a_row_msg += f" this year, {max_loss_in_a_row_total} at " \
                                      f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        max_not_wins_in_a_row_msg = f"{not_wins_in_a_row} consecutive matches not winning, " \
-                                    f"{max_not_wins_in_a_row_year} at " \
-                                    f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}" \
-            if 0 < not_wins_in_a_row <= max_not_wins_in_a_row_year else \
-            f"{max_not_wins_in_a_row_year} consecutive matches not winning at " \
-            f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
+        if not_wins_in_a_row == 0:
+            max_not_wins_in_a_row_msg = f"{max_not_wins_in_a_row_year} consecutive matches not winning at " \
+                                        f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
+        else:
+            max_not_wins_in_a_row_msg = f"{not_wins_in_a_row} consecutive matches not winning"
+            if max_not_wins_in_a_row_year > not_wins_in_a_row:
+                max_not_wins_in_a_row_msg += f", {max_not_wins_in_a_row_year} at " \
+                                             f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
         if max_not_wins_in_a_row_total > max_not_wins_in_a_row_year:
             max_not_wins_in_a_row_msg += f" this year, {max_not_wins_in_a_row_total} at " \
                                          f"{max_not_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total"
