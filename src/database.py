@@ -336,19 +336,22 @@ class Database:
         not_playing_days_current = (datetime.now() - date).days
         not_loosing_days_current = (datetime.now() - previous_loss).days
         not_winning_days_current = (datetime.now() - previous_win).days
-        not_playing_days_msg = f"{not_playing_days_current} days without Padel"
+        not_playing_days_msg = f"{not_playing_days_current} days without padel" if not_playing_days_current > 1 \
+            else "Played padel yesterday" if not_playing_days_current == 1 else "Played padel today"
         if not_playing_days_year > not_playing_days_current:
             not_playing_days_msg += f", {not_playing_days_year} at {not_playing_date_year.strftime('%y-%m-%d')}"
         if not_playing_days_total > not_playing_days_year:
             not_playing_days_msg += f" this year, {not_playing_days_total} at " \
                                         f"{not_playing_date_total.strftime('%y-%m-%d')} in total"
-        not_loosing_days_msg = f"{not_loosing_days_current} days without loosing a match"
+        not_loosing_days_msg = f"{not_loosing_days_current} days not loosing a match" if not_loosing_days_current > 1 \
+            else "Loosed yesterday" if not_loosing_days_current == 1 else "Loosed today"
         if not_loosing_days_year > not_loosing_days_current:
             not_loosing_days_msg += f", {not_loosing_days_year} at {not_loosing_date_year.strftime('%y-%m-%d')}"
         if not_loosing_days_total > not_loosing_days_year:
             not_loosing_days_msg += f" this year, {not_loosing_days_total} at " \
                                     f"{not_loosing_date_total.strftime('%y-%m-%d')} in total"
-        not_winning_days_msg = f"{not_winning_days_current} days without winning a match"
+        not_winning_days_msg = f"{not_winning_days_current} days not winning a match" if not_winning_days_current > 1 \
+            else "Won yesterday" if not_winning_days_current == 1 else "Won today"
         if not_winning_days_year > not_winning_days_current:
             not_winning_days_msg += f", {not_winning_days_year} at {not_winning_date_year.strftime('%y-%m-%d')}"
         if not_winning_days_total > not_winning_days_year:
