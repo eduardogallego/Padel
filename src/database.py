@@ -336,28 +336,61 @@ class Database:
         not_playing_days_current = (datetime.now() - date).days
         not_loosing_days_current = (datetime.now() - previous_loss).days
         not_winning_days_current = (datetime.now() - previous_win).days
-        not_playing_days_msg = f"{not_playing_days_current} days without padel" if not_playing_days_current > 1 \
-            else "Played padel yesterday" if not_playing_days_current == 1 else "Played padel today"
+        explanation = " days without padel"
+        if not_playing_days_current == 0:
+            not_playing_days_msg = "Played padel today"
+        elif not_playing_days_current == 1:
+            not_playing_days_msg = "Played padel yesterday"
+        else:
+            not_playing_days_msg = f"{not_playing_days_current}{explanation}"
+            explanation = ""
         if not_playing_days_year > not_playing_days_current:
-            not_playing_days_msg += f", {not_playing_days_year} at {not_playing_date_year.strftime('%y-%m-%d')}"
+            not_playing_days_msg += \
+                f", {not_playing_days_year}{explanation} at {not_playing_date_year.strftime('%y-%m-%d')}"
         if not_playing_days_total > not_playing_days_year:
-            not_playing_days_msg += f" this year, {not_playing_days_total} at " \
-                                        f"{not_playing_date_total.strftime('%y-%m-%d')} in total"
-        not_loosing_days_msg = f"{not_loosing_days_current} days not loosing a match" if not_loosing_days_current > 1 \
-            else "Loosed yesterday" if not_loosing_days_current == 1 else "Loosed today"
+            if not_playing_days_year > not_playing_days_current:
+                not_playing_days_msg += " this year"
+            not_playing_days_msg += \
+                f", {not_playing_days_total} at {not_playing_date_total.strftime('%y-%m-%d')} in total"
+        not_loosing_days_msg = ""
+        separator = ""
+        explanation = " days not loosing a match"
+        if not_loosing_days_current == 0:
+            not_loosing_days_msg = "Loosed today"
+            separator = ", "
+        elif not_loosing_days_current == 1:
+            not_loosing_days_msg = "Loosed yesterday"
+            separator = ", "
+        elif not_loosing_days_current > not_playing_days_current:
+            not_loosing_days_msg = f"{not_loosing_days_current}{explanation}"
+            explanation = ""
+            separator = ", "
         if not_loosing_days_year > not_loosing_days_current:
-            not_loosing_days_msg += f", {not_loosing_days_year} at {not_loosing_date_year.strftime('%y-%m-%d')}"
+            not_loosing_days_msg += \
+                f"{separator}{not_loosing_days_year}{explanation} at {not_loosing_date_year.strftime('%y-%m-%d')}"
         if not_loosing_days_total > not_loosing_days_year:
             not_loosing_days_msg += f" this year, {not_loosing_days_total} at " \
                                     f"{not_loosing_date_total.strftime('%y-%m-%d')} in total"
-        not_winning_days_msg = f"{not_winning_days_current} days not winning a match" if not_winning_days_current > 1 \
-            else "Won yesterday" if not_winning_days_current == 1 else "Won today"
+        not_winning_days_msg = ""
+        separator = ""
+        explanation = " days not winning a match"
+        if not_winning_days_current == 0:
+            not_winning_days_msg = "Won today"
+            separator = ", "
+        elif not_winning_days_current == 1:
+            not_winning_days_msg = "Won yesterday"
+            separator = ", "
+        elif not_winning_days_current > not_playing_days_current:
+            not_winning_days_msg = f"{not_winning_days_current}{explanation}"
+            explanation = ""
+            separator = ", "
         if not_winning_days_year > not_winning_days_current:
-            not_winning_days_msg += f", {not_winning_days_year} at {not_winning_date_year.strftime('%y-%m-%d')}"
+            not_winning_days_msg += \
+                f"{separator}{not_winning_days_year}{explanation} at {not_winning_date_year.strftime('%y-%m-%d')}"
         if not_winning_days_total > not_winning_days_year:
             not_winning_days_msg += f" this year, {not_winning_days_total} at " \
                                     f"{not_winning_date_total.strftime('%y-%m-%d')} in total"
-        if wins_in_a_row == 0:
+        if wins_in_a_row < 2:
             max_wins_in_a_row_msg = f"{max_wins_in_a_row_year} consecutive matches won at " \
                                     f"{max_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
         else:
@@ -368,7 +401,7 @@ class Database:
         if max_wins_in_a_row_total > max_wins_in_a_row_year:
             max_wins_in_a_row_msg += f" this year, {max_wins_in_a_row_total} at " \
                                      f"{max_wins_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        if not_loss_in_a_row == 0:
+        if not_loss_in_a_row < 2:
             max_not_loss_in_a_row_msg = f"{max_not_loss_in_a_row_year} consecutive matches not loosing at " \
                                         f"{max_not_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
         else:
@@ -379,7 +412,7 @@ class Database:
         if max_not_loss_in_a_row_total > max_not_loss_in_a_row_year:
             max_not_loss_in_a_row_msg += f" this year, {max_not_loss_in_a_row_total} at " \
                                          f"{max_not_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        if loss_in_a_row == 0:
+        if loss_in_a_row < 2:
             max_loss_in_a_row_msg = f"{max_loss_in_a_row_year} consecutive matches lost at " \
                                     f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
         else:
@@ -390,7 +423,7 @@ class Database:
         if max_loss_in_a_row_total > max_not_loss_in_a_row_year:
             max_loss_in_a_row_msg += f" this year, {max_loss_in_a_row_total} at " \
                                      f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total"
-        if not_wins_in_a_row == 0:
+        if not_wins_in_a_row < 2:
             max_not_wins_in_a_row_msg = f"{max_not_wins_in_a_row_year} consecutive matches not winning at " \
                                         f"{max_not_wins_in_a_row_date_year.strftime('%y-%m-%d')}"
         else:
