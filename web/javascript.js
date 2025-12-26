@@ -95,30 +95,39 @@ function footResults(data) {
     let loss = 0;
     let draw = 0;
     const yearMap = new Map();
-    let years = []
+    let years = [];
+    let matches = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let monthSet = [new Set(), new Set(), new Set(), new Set(), new Set(),
+        new Set(), new Set(), new Set(), new Set(), new Set(), new Set(), new Set()]
     data.forEach(function(data) {
         const dateTokens = data.date.split("-");
+        let year = dateTokens[0];
+        let monthId = parseInt(dateTokens[1]) - 1;
         let resultMap;
-        if (yearMap.has(dateTokens[0])) {
-            resultMap = yearMap.get(dateTokens[0]);
+        if (yearMap.has(year)) {
+            resultMap = yearMap.get(year);
         } else {
             resultMap = new Map([['win', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
                 ['draw', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], ['loss', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]);
-            yearMap.set(dateTokens[0], resultMap);
-            years.push(dateTokens[0]);
+            yearMap.set(year, resultMap);
+            years.push(year);
         }
-        let id = parseInt(dateTokens[1]) - 1;
+        matches[monthId] += 1;
+        monthSet[monthId].add(year);
         if (data.result == null) {
             draw += 1;
-            resultMap.get('draw')[id] += 1;
+            resultMap.get('draw')[monthId] += 1;
         } else if (data.result === 1) {
             win += 1;
-            resultMap.get('win')[id] += 1;
+            resultMap.get('win')[monthId] += 1;
         } else {
             loss += 1;
-            resultMap.get('loss')[id] += 1;
+            resultMap.get('loss')[monthId] += 1;
         }
     });
+    for(let id = 0, length = matches.length; id < length; id++){
+        matches[id] = matches[id] / monthSet[id].size;
+    }
     let result = win + "/" + draw + "/" + loss;
     if (lastResult !== result) {
         let chart = document.getElementById("chartId").getContext("2d");
@@ -156,7 +165,7 @@ function footResults(data) {
             type: 'bar',
             data: {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                    'August', 'September', 'October', 'November', 'December'],
+                    'August', 'September', 'October', 'November', 'December']
             },
             options: {
                 responsive: true,
@@ -170,6 +179,14 @@ function footResults(data) {
                 }
             }
         });
+        monthsId.data.datasets.push({
+            label: 'matches',
+            data: matches,
+            backgroundColor: '#057dcd',
+            borderColor: '#057dcd',
+            type: 'line',
+            tension: 0.4
+        })
         years.sort().forEach(function (year, index) {
             monthsId.data.datasets.push({
                 label: 'loss_' + year,
