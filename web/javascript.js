@@ -125,9 +125,12 @@ function footResults(data) {
             resultMap.get('loss')[monthId] += 1;
         }
     });
-    for(let id = 0, length = matches.length; id < length; id++){
+    let mean = 0;
+    for(let id = 0, length = matches.length; id < length; id++) {
         matches[id] = matches[id] / monthSet[id].size;
+        mean += matches[id];
     }
+    mean /= 12;
     let result = win + "/" + draw + "/" + loss;
     if (lastResult !== result) {
         let chart = document.getElementById("chartId").getContext("2d");
@@ -185,7 +188,17 @@ function footResults(data) {
             backgroundColor: '#057dcd',
             borderColor: '#057dcd',
             type: 'line',
-            tension: 0.4
+            tension: 0.4,
+            stack: 'matches'
+        })
+        monthsId.data.datasets.push({
+            label: 'mean',
+            data: [mean, mean, mean, mean, mean, mean, mean, mean, mean, mean, mean, mean],
+            backgroundColor: '#057dcd',
+            borderColor: '#057dcd',
+            borderDash: [5, 5],
+            type: 'line',
+            stack: 'mean'
         })
         years.sort().forEach(function (year, index) {
             monthsId.data.datasets.push({
