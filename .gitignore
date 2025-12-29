@@ -1,4 +1,5 @@
 /.idea/
+/.venv/
 /config/config.json
 /config/credentials.json
 /config/scheduled.json
@@ -7,6 +8,5 @@
 /padel.log
 /src/__pycache__/
 /src/test.py
-/venv/
 /workingdir/
 /__pycache__/
