@@ -361,7 +361,7 @@ class Database:
         elif not_loosing_days_current == 1:
             not_loosing_days_msg = "Loosed yesterday"
             separator = ", "
-        elif not_loosing_days_current > not_playing_days_current or not_loosing_days_current > not_loosing_days_year:
+        elif not_loosing_days_current > not_playing_days_current or not_loosing_days_year == 0:
             not_loosing_days_msg = f"{not_loosing_days_current}{explanation}"
             explanation = ""
             separator = ", "
@@ -380,7 +380,7 @@ class Database:
         elif not_winning_days_current == 1:
             not_winning_days_msg = "Won yesterday"
             separator = ", "
-        elif not_winning_days_current > not_playing_days_current or not_winning_days_current > not_winning_days_year:
+        elif not_winning_days_current > not_playing_days_current or not_winning_days_year == 0:
             not_winning_days_msg = f"{not_winning_days_current}{explanation}"
             explanation = ""
             separator = ", "
@@ -457,10 +457,12 @@ class Database:
         loss_perc_total = loss_total * 100 / matches_total
         prev_rnd_total = (math.ceil(loss_perc_total / 5) - 1) * 5
         loss_rnd_total = math.ceil((100 * loss_total / prev_rnd_total) - matches_total)
+        wins_to_next_win = " ({wins_rnd_year} wins to {next_rnd_year}%)" if wins_rnd_year > 0 else ""
+        wins_to_next_loss = " ({loss_rnd_year} wins to {prev_rnd_year}%)" if loss_rnd_year > 0 else ""
         messages.extend([
-            f"{round(wins_perc_year, 1)}% victories this year ({wins_rnd_year} wins to {next_rnd_year}%), "
+            f"{round(wins_perc_year, 1)}% victories this year{wins_to_next_win}, "
             f"{round(wins_perc_total, 1)}% victories in total ({wins_rnd_total} wins to {next_rnd_total}%)",
-            f"{round(loss_perc_year, 1)}% defeats this year ({loss_rnd_year} wins to {prev_rnd_year}%), "
+            f"{round(loss_perc_year, 1)}% defeats this year{wins_to_next_loss}, "
             f"{round(loss_perc_total, 1)}% defeats in total ({loss_rnd_total} wins to {prev_rnd_total}%)",
             f"{matches_year} matches this year ({wins_year}/{draws_year}/{loss_year}), "
             f"{matches_total} matches in total ({wins_total}/{draws_total}/{loss_total})"])
@@ -469,6 +471,7 @@ class Database:
         rival_year = []
         config = Config.get_default_filter()
         config['year'] = current_year
+        config['minMatches'] = 1
         for player in self.get_player_stats(config):
             if player['player'] == 'Others':
                 continue
@@ -478,17 +481,17 @@ class Database:
                 games_year.insert(1, player)
             elif len(games_year) == 2 or player['total'] > games_year[2]['total']:
                 games_year.insert(2, player)
-            if len(partner_year) == 0 or player['pt'] > partner_year[0]['pt']:
+            if player['pt'] > 0 and (len(partner_year) == 0 or player['pt'] > partner_year[0]['pt']):
                 partner_year.insert(0, player)
-            elif len(partner_year) == 1 or player['pt'] > partner_year[1]['pt']:
+            elif player['pt'] > 0 and (len(partner_year) == 1 or player['pt'] > partner_year[1]['pt']):
                 partner_year.insert(1, player)
-            elif len(partner_year) == 2 or player['pt'] > partner_year[2]['pt']:
+            elif player['pt'] > 0 and (len(partner_year) == 2 or player['pt'] > partner_year[2]['pt']):
                 partner_year.insert(2, player)
-            if len(rival_year) == 0 or player['rt'] > rival_year[0]['rt']:
+            if player['rt'] > 0 and (len(rival_year) == 0 or player['rt'] > rival_year[0]['rt']):
                 rival_year.insert(0, player)
-            elif len(rival_year) == 1 or player['rt'] > rival_year[1]['rt']:
+            elif player['rt'] > 0 and (len(rival_year) == 1 or player['rt'] > rival_year[1]['rt']):
                 rival_year.insert(1, player)
-            elif len(rival_year) == 2 or player['rt'] > rival_year[2]['rt']:
+            elif player['rt'] > 0 and (len(rival_year) == 2 or player['rt'] > rival_year[2]['rt']):
                 rival_year.insert(2, player)
         games_total = []
         partner_total = []
@@ -518,47 +521,47 @@ class Database:
         if not games_year:
             matches_this_year += "0"
         if len(games_year) > 0:
-            matches_this_year += f"{games_year[0]['player']} {games_year[0]['total']} "
-            f"{games_year[0]['pw'] + games_year[0]['rw']}/{games_year[0]['pd'] + games_year[0]['rd']}/"
-            f"{games_year[0]['pl'] + games_year[0]['rl']}"
+            matches_this_year += (f"{games_year[0]['player']} {games_year[0]['total']} "
+                f"{games_year[0]['pw'] + games_year[0]['rw']}/{games_year[0]['pd'] + games_year[0]['rd']}/"
+                f"{games_year[0]['pl'] + games_year[0]['rl']}")
         if len(games_year) > 1:
-            matches_this_year += f", {games_year[1]['player']} {games_year[1]['total']} "
-            f"{games_year[1]['pw'] + games_year[1]['rw']}/{games_year[1]['pd'] + games_year[1]['rd']}/"
-            f"{games_year[1]['pl'] + games_year[1]['rl']}"
+            matches_this_year += (f", {games_year[1]['player']} {games_year[1]['total']} "
+                f"{games_year[1]['pw'] + games_year[1]['rw']}/{games_year[1]['pd'] + games_year[1]['rd']}/"
+                f"{games_year[1]['pl'] + games_year[1]['rl']}")
         if len(games_year) > 2:
-            matches_this_year += f", {games_year[2]['player']} {games_year[2]['total']} "
-            f"{games_year[2]['pw'] + games_year[2]['rw']}/{games_year[2]['pd'] + games_year[2]['rd']}/"
-            f"{games_year[2]['pl'] + games_year[2]['rl']}"
+            matches_this_year += (f", {games_year[2]['player']} {games_year[2]['total']} "
+                f"{games_year[2]['pw'] + games_year[2]['rw']}/{games_year[2]['pd'] + games_year[2]['rd']}/"
+                f"{games_year[2]['pl'] + games_year[2]['rl']}")
         partner_this_year = f"Partners this year: "
         if not partner_year:
             partner_this_year += "0"
         if len(partner_year) > 0:
-            partner_this_year += f"{partner_year[0]['player']} {partner_year[0]['total']} "
-            f"{partner_year[0]['pw'] + partner_year[0]['rw']}/{partner_year[0]['pd'] + partner_year[0]['rd']}/"
-            f"{partner_year[0]['pl'] + partner_year[0]['rl']}"
+            partner_this_year += (f"{partner_year[0]['player']} {partner_year[0]['total']} "
+                f"{partner_year[0]['pw'] + partner_year[0]['rw']}/{partner_year[0]['pd'] + partner_year[0]['rd']}/"
+                f"{partner_year[0]['pl'] + partner_year[0]['rl']}")
         if len(partner_year) > 1:
-            partner_this_year += f", {partner_year[1]['player']} {partner_year[1]['total']} "
-            f"{partner_year[1]['pw'] + partner_year[1]['rw']}/{partner_year[1]['pd'] + partner_year[1]['rd']}/"
-            f"{partner_year[1]['pl'] + partner_year[1]['rl']}"
+            partner_this_year += (f", {partner_year[1]['player']} {partner_year[1]['total']} "
+                f"{partner_year[1]['pw'] + partner_year[1]['rw']}/{partner_year[1]['pd'] + partner_year[1]['rd']}/"
+                f"{partner_year[1]['pl'] + partner_year[1]['rl']}")
         if len(partner_year) > 2:
-            partner_this_year += f", {partner_year[2]['player']} {partner_year[2]['total']} "
-            f"{partner_year[2]['pw'] + partner_year[2]['rw']}/{partner_year[2]['pd'] + partner_year[2]['rd']}/"
-            f"{partner_year[2]['pl'] + partner_year[2]['rl']}"
+            partner_this_year += (f", {partner_year[2]['player']} {partner_year[2]['total']} "
+                f"{partner_year[2]['pw'] + partner_year[2]['rw']}/{partner_year[2]['pd'] + partner_year[2]['rd']}/"
+                f"{partner_year[2]['pl'] + partner_year[2]['rl']}")
         rivals_this_year = f"Rivals this year: "
         if not rival_year:
             rivals_this_year += "0"
         if len(rival_year) > 0:
-            rivals_this_year += f"{rival_year[0]['player']} {rival_year[0]['total']} "
-            f"{rival_year[0]['pw'] + rival_year[0]['rw']}/{rival_year[0]['pd'] + rival_year[0]['rd']}/"
-            f"{rival_year[0]['pl'] + rival_year[0]['rl']}"
+            rivals_this_year += (f"{rival_year[0]['player']} {rival_year[0]['total']} "
+                f"{rival_year[0]['pw'] + rival_year[0]['rw']}/{rival_year[0]['pd'] + rival_year[0]['rd']}/"
+                f"{rival_year[0]['pl'] + rival_year[0]['rl']}")
         if len(rival_year) > 1:
-            rivals_this_year += f", {rival_year[1]['player']} {rival_year[1]['total']} "
-            f"{rival_year[1]['pw'] + rival_year[1]['rw']}/{rival_year[1]['pd'] + rival_year[1]['rd']}/"
-            f"{rival_year[1]['pl'] + rival_year[1]['rl']}"
+            rivals_this_year += (f", {rival_year[1]['player']} {rival_year[1]['total']} "
+                f"{rival_year[1]['pw'] + rival_year[1]['rw']}/{rival_year[1]['pd'] + rival_year[1]['rd']}/"
+                f"{rival_year[1]['pl'] + rival_year[1]['rl']}")
         if len(rival_year) > 2:
-            rivals_this_year += f", {rival_year[2]['player']} {rival_year[2]['total']} "
-            f"{rival_year[2]['pw'] + rival_year[2]['rw']}/{rival_year[2]['pd'] + rival_year[2]['rd']}/"
-            f"{rival_year[2]['pl'] + rival_year[2]['rl']}"
+            rivals_this_year += (f", {rival_year[2]['player']} {rival_year[2]['total']} "
+                f"{rival_year[2]['pw'] + rival_year[2]['rw']}/{rival_year[2]['pd'] + rival_year[2]['rd']}/"
+                f"{rival_year[2]['pl'] + rival_year[2]['rl']}")
         messages.extend([matches_this_year, f"Matches in total: {games_total[0]['player']} {games_total[0]['total']} "
             f"{games_total[0]['pw'] + games_total[0]['rw']}/{games_total[0]['pd'] + games_total[0]['rd']}/"
             f"{games_total[0]['pl'] + games_total[0]['rl']}, {games_total[1]['player']} {games_total[1]['total']} "
