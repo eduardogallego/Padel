@@ -6,7 +6,7 @@
         <label for="year" class="col-3 col-form-label">Year</label>
         <div class="col-9">
             <select class="form-control" id="year" name="year">
-                {% for k, v in [(0, 'none'), (2024, 2024), (2025, 2025)] %}
+                {% for k, v in [(0, 'none'), (2024, 2024), (2025, 2025), (2026, 2026)] %}
                     {% if k == filter['year'] %}
                         <option selected="selected" value="{{ k }}">{{ v }}</option>
                     {% else %}
