@@ -457,8 +457,8 @@ class Database:
         loss_perc_total = loss_total * 100 / matches_total
         prev_rnd_total = (math.ceil(loss_perc_total / 5) - 1) * 5
         loss_rnd_total = math.ceil((100 * loss_total / prev_rnd_total) - matches_total)
-        wins_to_next_win = " ({wins_rnd_year} wins to {next_rnd_year}%)" if wins_rnd_year > 0 else ""
-        wins_to_next_loss = " ({loss_rnd_year} wins to {prev_rnd_year}%)" if loss_rnd_year > 0 else ""
+        wins_to_next_win = f" ({wins_rnd_year} wins to {next_rnd_year}%)" if wins_rnd_year > 0 else ""
+        wins_to_next_loss = f" ({loss_rnd_year} wins to {prev_rnd_year}%)" if loss_rnd_year > 0 else ""
         messages.extend([
             f"{round(wins_perc_year, 1)}% victories this year{wins_to_next_win}, "
             f"{round(wins_perc_total, 1)}% victories in total ({wins_rnd_total} wins to {next_rnd_total}%)",
