@@ -536,32 +536,26 @@ class Database:
         if not partner_year:
             partner_this_year += "0"
         if len(partner_year) > 0:
-            partner_this_year += (f"{partner_year[0]['player']} {partner_year[0]['total']} "
-                f"{partner_year[0]['pw'] + partner_year[0]['rw']}/{partner_year[0]['pd'] + partner_year[0]['rd']}/"
-                f"{partner_year[0]['pl'] + partner_year[0]['rl']}")
+            partner_this_year += (f"{partner_year[0]['player']} {partner_year[0]['pt']} "
+                                  f"{partner_year[0]['pw']}/{partner_year[0]['pd']}/{partner_year[0]['pl']}")
         if len(partner_year) > 1:
-            partner_this_year += (f", {partner_year[1]['player']} {partner_year[1]['total']} "
-                f"{partner_year[1]['pw'] + partner_year[1]['rw']}/{partner_year[1]['pd'] + partner_year[1]['rd']}/"
-                f"{partner_year[1]['pl'] + partner_year[1]['rl']}")
+            partner_this_year += (f", {partner_year[1]['player']} {partner_year[1]['pt']} "
+                                  f"{partner_year[1]['pw']}/{partner_year[1]['pd']}/{partner_year[1]['pl']}")
         if len(partner_year) > 2:
-            partner_this_year += (f", {partner_year[2]['player']} {partner_year[2]['total']} "
-                f"{partner_year[2]['pw'] + partner_year[2]['rw']}/{partner_year[2]['pd'] + partner_year[2]['rd']}/"
-                f"{partner_year[2]['pl'] + partner_year[2]['rl']}")
+            partner_this_year += (f", {partner_year[2]['player']} {partner_year[2]['pt']} "
+                                  f"{partner_year[2]['pw']}/{partner_year[2]['pd']}/{partner_year[2]['pl']}")
         rivals_this_year = f"Rivals this year: "
         if not rival_year:
             rivals_this_year += "0"
         if len(rival_year) > 0:
-            rivals_this_year += (f"{rival_year[0]['player']} {rival_year[0]['total']} "
-                f"{rival_year[0]['pw'] + rival_year[0]['rw']}/{rival_year[0]['pd'] + rival_year[0]['rd']}/"
-                f"{rival_year[0]['pl'] + rival_year[0]['rl']}")
+            rivals_this_year += (f"{rival_year[0]['player']} {rival_year[0]['rt']} "
+                                 f"{rival_year[0]['rw']}/{rival_year[0]['rd']}/{rival_year[0]['rl']}")
         if len(rival_year) > 1:
-            rivals_this_year += (f", {rival_year[1]['player']} {rival_year[1]['total']} "
-                f"{rival_year[1]['pw'] + rival_year[1]['rw']}/{rival_year[1]['pd'] + rival_year[1]['rd']}/"
-                f"{rival_year[1]['pl'] + rival_year[1]['rl']}")
+            rivals_this_year += (f", {rival_year[1]['player']} {rival_year[1]['rt']} "
+                                 f"{rival_year[1]['rw']}/{rival_year[1]['rd']}/{rival_year[1]['rl']}")
         if len(rival_year) > 2:
-            rivals_this_year += (f", {rival_year[2]['player']} {rival_year[2]['total']} "
-                f"{rival_year[2]['pw'] + rival_year[2]['rw']}/{rival_year[2]['pd'] + rival_year[2]['rd']}/"
-                f"{rival_year[2]['pl'] + rival_year[2]['rl']}")
+            rivals_this_year += (f", {rival_year[2]['player']} {rival_year[2]['rt']} "
+                                 f"{rival_year[2]['rw']}/{rival_year[2]['rd']}/{rival_year[2]['rl']}")
         messages.extend([matches_this_year, f"Matches in total: {games_total[0]['player']} {games_total[0]['total']} "
             f"{games_total[0]['pw'] + games_total[0]['rw']}/{games_total[0]['pd'] + games_total[0]['rd']}/"
             f"{games_total[0]['pl'] + games_total[0]['rl']}, {games_total[1]['player']} {games_total[1]['total']} "
