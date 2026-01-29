@@ -587,7 +587,6 @@ class Database:
         self.connection.commit()
         return cursor.rowcount
 
-
 if __name__ == "__main__":
     configuration = Config()
     database = Database(configuration)
