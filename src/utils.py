@@ -15,7 +15,7 @@ class Config:
 
     @staticmethod
     def get_default_filter():
-        return {'minMatches': 3, 'player1': None, 'player2': None, 'player3': None, 'showDraw': True,
+        return {'minMatches': 4, 'player1': None, 'player2': None, 'player3': None, 'showDraw': True,
                 'showLoss': True, 'showWin': True, 'show1on1': True, 'show2on2': True, 'year': 0}
 
 

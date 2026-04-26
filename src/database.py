@@ -426,7 +426,7 @@ class Database:
             if max_loss_in_a_row_year > loss_in_a_row:
                 max_loss_in_a_row_msg += f", {max_loss_in_a_row_year} at " \
                                          f"{max_loss_in_a_row_date_year.strftime('%y-%m-%d')}"
-        if max_loss_in_a_row_total > max_not_loss_in_a_row_year:
+        if max_loss_in_a_row_total > max_loss_in_a_row_year:
             max_loss_in_a_row_msg += f" this year, {max_loss_in_a_row_total} at " \
                                      f"{max_loss_in_a_row_date_total.strftime('%y-%m-%d')} in total"
         if not max_not_wins_in_a_row_date_year:
