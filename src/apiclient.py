@@ -50,7 +50,7 @@ class ApiClient:
         user = self.config.get('user_name')
         requests_dict = {"Password": self.config.get('user_password'),
                          "User": user, "LoginType": "3", "Invitations": True}
-        response = self.session.post('https://api.iesa.es/tcsecurity/api/v1/login', json=requests_dict)
+        response = self.session.post('https://api.iesa.es/tcsecurity/api/v1/login', json=requests_dict, verify=False)
         if response.status_code != 200:
             delta = (time.time() * 1000) - ini_tt
             self.logger.error(f"Login {user} error ({delta} ms) {response.status_code} - {response.reason}")
